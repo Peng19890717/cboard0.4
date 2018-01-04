@@ -1,0 +1,80 @@
+<div class="container">
+<div class="path-form">
+    <ul>
+        <label>漏斗名称：</label>
+        <input id="funnelName" ng-model="funnelName" required>
+        <span class="red must" ng-show="funnel_Name">　请填写漏斗名称</span>
+    </ul>
+    <ul>
+        <label>视频源：</label>
+        <select id="video">
+            <option value="yinhe,tencent" selected="selected">全部</option>
+            <option value="yinhe">爱奇艺</option>
+            <option value="tencent">腾讯</option>
+        </select>
+    </ul>
+    <ul class="clearfix">
+        <label style="float:left">统计维度：</label>
+        <div class="type-check funnel" style="float:left;width: auto">
+            <ul class="jstree-default"><span class="jstree-anchor"><i class="jstree-icon jstree-checkbox jstree-clicked" ng-click="clickCollect($event,1)"></i>UV</span></ul>
+            <ul class="jstree-default" style="display: none"><span class="jstree-anchor"><i class="jstree-icon jstree-checkbox" ng-click="clickCollect($event,2)"></i>PV</span></ul>
+        </div>
+        <span class="red must" id="pvuv" style="line-height: 33px; display: none">　请选择其中至少一项</span>
+    </ul>
+</div>
+<div class="path-form step-two-box" style="margin-top:10px">
+    <ul class="clearfix" id="step1">
+        <li class="fl"><label>路径步骤：</label><li>
+        <li class="fl"><span class="step">第 1 步</span></li>
+        <li class="fl step-two">
+            <select ng-change="checkModule1(v1,1)" ng-model="v1" ng-init="v1=''" required>
+                <option value="" selected="selected">请选择</option>
+                <option value="CC_HomePage6" >6.0首页</option>
+                <option value="CC_Video_6.0" selected="selected">6.0影视中心</option>
+            </select>
+            <select id="screen1" name="" class="form-control" ng-change="screenCondition(n1,1)" ng-model="n1" ng-init="n1=''" required>
+                <option value="" selected="selected">请选择</option>
+                <option value={{colname.id}} ng-repeat="colname in colNameList1">{{colname.name}}</option>
+            </select>
+            <select id="page1" ng-show="pageTrue1=='1'" ng-model="p1" ng-change="pageNameChose(p1,1)">
+                <option value="" selected="selected">请选择</option>
+                <option value="page_name">页面名称</option>
+            </select>
+            <select ng-change="pageChose(1)"  ng-show="pageName1=='1'" class="form-control"
+                     ng-options="page for page in dataPage1"
+                     ng-model="page1">
+            </select>
+        </li>
+    </ul>
+    <ul class="clearfix" id="step2">
+        <li class="fl"><label>　</label></li>
+        <li class="fl"><span class="step">第 2 步</span></li>
+        <li class="fl step-two">
+                <select ng-change="checkModule2(v2,2)" ng-model="v2" ng-init="v2=''" required>
+                    <option value="" selected="selected">请选择</option>
+                    <option value="CC_HomePage6" >6.0首页</option>
+                    <option value="CC_Video_6.0" selected="selected">6.0影视中心</option>
+                </select>
+                <select id="screen2" name="" class="form-control" ng-change="screenCondition(n2,2)" ng-model="n2" ng-init="n2=''" required>
+                    <option value="" selected="selected">请选择</option>
+                    <option value={{colname.id}} ng-repeat="colname in colNameList2">{{colname.name}}</option>
+                </select>
+                <select id="page2"  ng-show="pageTrue2=='1'" ng-model="p2" ng-change="pageNameChose(p2,2)">
+                    <option value="" selected="selected">请选择</option>
+                    <option value="page_name">页面名称</option>
+                </select>
+                <select  ng-change="pageChose(2)"  ng-show="pageName2=='1'" class="form-control"
+                        ng-options="page for page in dataPage2"
+                        ng-model="page2">
+                </select>
+
+        </li>
+    </ul>
+</div>
+    <p class="red" ng-show="m_step" ng-bind="stepText" style="background:#fff;padding-left:140px; padding-bottom: 30px; margin: 0"></p>
+<div class="path-form btn-group-sm"><button class="step-btn btn btn-primary" ng-click="stepAddBtn(2)">增加步骤</button><button class="step-btn btn btn-primary" ng-click="reduceBtn()">减掉步骤</button></div>
+<div class="nfbutton">
+    <button style="margin-top:20px" class="step-btn route-btn" ng-click="saveBtn()">保存</button>
+    <button class="submit-btn route-btn" ng-click="clearBtn()">取消</button>
+</div>
+</div>

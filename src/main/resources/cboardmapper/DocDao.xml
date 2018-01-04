@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.cboard.daocboard.DocDao">
+    <!--从mysql对的Cboard中获取-->
+    <select id="getOneDoc" resultType="org.cboard.pojo.sec.DashboardFunnel">
+        select
+              nfunnel_path ,
+              vname ,
+              vdata_source ,
+              nstep ,
+              vpro_module ,
+              vlog_name ,
+              vpage_name ,
+              vparent_log_name ,
+              vparent_page_name
+        from dashboard_doc
+        where pk_funnel_path = #{pk_funnel_path} <!--获取0位置参数的值-->
+    </select>
+
+
+    <select id="getFunnelAnalysisData" resultType="java.util.HashMap">
+
+
+        SELECT DISTINCT
+        pk_funnel_path,
+        vname
+        FROM
+        dashboard_doc
+    </select>
+
+    <select id="getFunnelAnalysisVideoData" resultType="java.util.HashMap">
+        SELECT DISTINCT
+        pk_funnel_path,
+        vdata_source
+        FROM
+        dashboard_doc
+    </select>
+
+    <insert id="saveFunnelData" parameterType="org.cboard.pojo.sec.DashboardFunnel">
+
+          <if test="funnelList!=null and funnelList.size()>0">
+              INSERT INTO
+              dashboard_doc
+              (vname,npv_uv,vdata_source,pk_funnel_path,nfunnel_path,nstep,vpro_module,vlog_name,vpage_name,vparent_log_name,vparent_page_name)
+              VALUES
+              <foreach collection="funnelList" item="list"  separator=",">
+                  (#{list.vname},#{list.npv_uv},#{list.vdata_source},#{list.pk_funnel_path},#{list.nfunnel_path},#{list.nstep},#{list.vpro_module},#{list.vlog_name},#{list.vpage_name},#{list.vparent_log_name},#{list.vparent_page_name})
+              </foreach>
+          </if>
+    </insert>
+
+    <select id="selectMaxPfp" resultType="java.lang.Integer">
+        SELECT max(pk_funnel_path) as max_pk_funnel_path
+        FROM dashboard_doc
+    </select>
+
+    <select id="getDetails" resultType="org.cboard.pojo.sec.StepFather">
+        select
+		      a.npv_uv ,
+		      a.vdata_source ,
+		      a.vpro_module ,
+		      a.vlog_name ,
+		      a.vpage_name ,
+		      b.vparent_pro_module ,
+		      b.vparent_log_name ,
+		      b.vparent_page_name
+        from dashboard_doc a , dashboard_doc_father b
+        where a.id = b.doc_id
+        and a.pk_funnel_path = #{pk_funnel_path}
+    </select>
+
+
+</mapper>

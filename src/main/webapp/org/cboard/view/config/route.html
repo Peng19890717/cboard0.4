@@ -1,0 +1,213 @@
+
+            <section class="content-header">
+                <h1>
+                    事件分析
+                </h1>
+            </section>
+            <div id="inner-container" class="content" style="margin-top: 15px;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box box-solid" style="border-left: 1px solid #d2d6de; border-right: 1px solid #d2d6de">
+                            <div class="box-body">
+                                <div class="col-sm-12">
+                                    <div style="min-height: 35px;height: auto;padding: 0px">
+                                        <form  class="form-inline">
+                                            <div class="form-group" style="display: none">
+                                                <label>视频源</label>
+                                                <select class="form-control" id="pkg_sources">
+                                                    <option value="('yinhe','tencent')" selected="selected">全部</option>
+                                                    <option value="'yinhe'">爱奇艺</option>
+                                                    <option value="'tencent'">腾讯</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>产品模块</label>
+                                                <select id="data_sources" name="" class="form-control" ng-change="checkModule(item3)"
+                                                        ng-options="v.id as v.name for v in sourcesList"
+                                                        ng-model="item3" required>
+                                                </select>
+                                            </div>
+
+                                            <div class="box-body form-group" id='search_event'>
+                                                <label>事件名称</label>
+                                                <input type="text" id="event_value_name" class="form-control" ng-model="event_name"/>
+                                                <ul class="event-menu event-list" style="height: 200px; overflow: auto;">
+                                                    <li ng-repeat="init in initEventList" ng-click="checkEvent(init.id,init.name)">{{init.name}}</li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>细分属性</label>
+                                                <select id="dim" name="aaa" class="form-control"
+                                                        ng-options="dim.id as dim.name for dim in dataDim"
+                                                        ng-model="item">
+                                                </select>
+                                            </div>
+                                            </br>
+                                            <div class="marginTop10 condition">
+                                                <div class="form-group">
+                                                    <label>筛选条件</label>
+                                                    <select id="screen" name="" class="form-control" ng-change="screenCondition(n)" ng-model="n" ng-init="n=''">
+                                                        <option value="" selected="selected">请选择</option>
+                                                        <option value={{colname.id}} ng-repeat="colname in colNameList">{{colname.name}}</option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="sr-only"></label>
+                                                    <select name="data" id="data" class="form-control">
+                                                        <option value="" selected="selected">请选择</option>
+                                                        <option value="=" ng-if="dataTrue=='4' || dataTrue=='3' || dataTrue=='2' || dataTrue=='1'" >等于</option>
+                                                        <option value="!=" ng-if="dataTrue=='4' || dataTrue=='3' || dataTrue=='1'">不等于</option>
+                                                        <option value="is null" ng-if="dataTrue=='1'">为空</option>
+                                                        <option value="is not null" ng-if="dataTrue=='1'">不为空</option>
+
+                                                        <option value=">" ng-if="dataTrue=='4'">大于</option>
+                                                        <option value=">=" ng-if="dataTrue=='4'">大于等于</option>
+                                                        <option value="<" ng-if="dataTrue=='4'">小于</option>
+                                                        <option value="<=" ng-if="dataTrue=='4'">小于等于</option>
+
+                                                        <option value="in" ng-if="dataTrue=='3' || dataTrue=='1'">包含</option>
+                                                        <option value="not in" ng-if="dataTrue=='3' || dataTrue=='1'">不包含</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="sr-only"></label>
+                                                    <select name="data_list" id="data_list" class="form-control" ng-if="dataTrue=='1' || dataTrue=='4'">
+                                                        <option value="">请选择</option>
+                                                        <option ng-repeat="thr in thrList"  value={{thr}}>{{thr}}</option>
+                                                    </select>
+                                                    <select name="login_list" id="login_list" class="form-control"  ng-if="dataTrue=='2'">
+                                                        <option value="未登录">未登录</option>
+                                                        <option value="已登录">已登录</option>
+                                                    </select>
+
+                                                    <div class="form-group" ng-show="dataTrue=='3'" style="position: relative">
+                                                        <input type="text" id='page_event' class="form-control page-input" ng-model="page_name" placeholder="请输入或选择"/>
+                                                        <ul class="event-menu page-list" style="height: 200px; overflow: auto;">
+                                                            <li ng-repeat="thr in thrList" ng-click="checkPage(thrId,thr)">{{thr}}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-primary" ng-click="querySub()">查询</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10" style="padding-right:0">
+                        <div class="box box-solid">
+                            <div class="box-header">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h3 class="box-title ng-binding">
+                                    <form action="" class="form-inline">
+                                        <div class="form-group">
+                                            <label>事件分析图表</label>
+                                            <select name="" id="timeType" class="form-control" ng-change="changeTime(timetype)" ng-model="timetype" ng-init="timetype='时'">
+                                                <option value="时" selected="selected">时</option>
+                                                <option value="日">日</option>
+                                                <option value="周">周</option>
+                                                <option value="月">月</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="sr-only"></label>
+                                            <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker" type="text"
+                                                   ng-model="date" options="opts" required/>
+                                        </div>
+                                    </form>
+                                </h3>
+                                <div class="type-check" style="display: none">
+                                    <ul class="jstree-default"><span class="jstree-anchor"><i class="jstree-icon jstree-checkbox jstree-clicked" ng-click="clickCollect($event)"></i>发生次数</span></ul>
+                                    <ul class="jstree-default"><span class="jstree-anchor"><i class="jstree-icon jstree-checkbox jstree-clicked" ng-click="clickCollect($event)"></i>人数</span></ul>
+                                    <ul class="jstree-default"><span class="jstree-anchor"><i class="jstree-icon jstree-checkbox jstree-clicked" ng-click="clickCollect($event)"></i>平均访问时长</span></ul>
+                                </div>
+
+
+                                <div class="box-tools pull-right" style="display: none">
+                                    <button type="button" class="btn btn-box-tool" ng-click="reload(widget)"><i class="fa fa-refresh"></i>
+                                    </button>
+                                    <!-- ngIf: widgetCfg --><button type="button" class="btn btn-box-tool ng-scope" ng-if="widgetCfg" ng-click="config(widget)"><i class="fa fa-wrench"></i>
+                                </button><!-- end ngIf: widgetCfg -->
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" ng-click="modalChart(widget)"><i class="fa fa-square-o"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="chartContent" class='conHeight' >
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="box box-solid">
+                            <div class="box-header">
+                                <h3 class="box-title ng-binding">细分属性</h3>
+                            </div>
+                            <div class="box-body " id='search_condition'>
+                                <input type="text" class="form-control marginBottom" placeholder="搜索" style="display: none" />
+                                <ul class="list-unstyled" style="height: 414px; overflow: auto;" ng-if="tacitly">
+                                    <li ng-repeat="val in dimValues track by val" class="jstree-default"><span class="jstree-anchor"><i class="jstree-icon jstree-checkbox jstree-clicked" ng-click="clickCollect($event,val,'T')"></i>{{val}}</span></li>
+                                </ul>
+                                <ul class="list-unstyled" style="height: 414px; overflow: auto;" ng-if="!tacitly">
+                                    <li ng-repeat="sea in seaValues track by sea" class="jstree-default"><span class="jstree-anchor"><i class="jstree-icon jstree-checkbox jstree-clicked" ng-click="clickCollect($event,sea,'C')"></i>{{sea}}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box box-solid">
+                            <div class="box box-solid">
+                                <div class="box-header">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    <h3 class="box-title ng-binding">
+                                        事件分析详情
+                                    </h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="exportBnt pull-right btn-group-sm" style="width: auto"><button class="btn btn-primary" ng-click="exportExcel()">导出Excel</button></div>
+                                    <table class="table table-striped" style="border-bottom: none;border-right:none;">
+                                        <thead>
+                                        <tr>
+                                            <td ng-if="initTime">统计日期</td>
+                                            <td>设备型号</td>
+                                            <td>发生次数</td>
+                                            <td>人数</td>
+                                        </tr>
+                                        <tbody>
+                                        <tr ng-repeat="data in dataSum" ng-if="!initTime">
+                                            <td>{{data[0]}}</td>
+                                            <td>{{data[1]}}</td>
+                                            <td>{{data[2]}}</td>
+                                        </tr>
+                                        <tr ng-repeat="time in dataTime" ng-if="initTime">
+                                            <td>{{time[0]}}</td>
+                                            <td>{{time[1]}}</td>
+                                            <td>{{time[2]}}</td>
+                                            <td>{{time[3]}}</td>
+                                        </tr>
+                                        </tbody>
+                                        </thead>
+                                    </table>
+                                    <div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>

@@ -1,0 +1,68 @@
+
+<section class="content-header">
+    <h1>
+        路径分析
+    </h1>
+</section>
+<div id="inner-container" class="content" style="margin-top: 15px;">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-solid">
+                <div class="box-body" style="border-left: 1px solid #d2d6de; border-right: 1px solid #d2d6de;">
+                    <form class="form-inline">
+                        <div class="form-group" id="search_funnelName">
+                            <label for="">路径名称</label>
+                            <select ng-model="funnelNameList_value" class="form-control" ng-change="funnelNameChange($index)">
+                                <option ng-repeat="x in funnelNameList" value="{{x.key}},{{$index}}">{{x.value}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="sr-only"></label>
+                            <label for="">时间</label>
+                            <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker" type="text"
+                                   ng-model="date" options="opts" required style="width: 200px;"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="sr-only"></label>
+                            <label for="">视频源</label>
+                            <input type="text" readonly="readonly" class="form-control" value="{{videName}}"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="sr-only"></label>
+                            <label for="">统计纬度</label>
+                            <input type="text" readonly="readonly" class="form-control" value="{{pvAndUv}}"/>
+                        </div>
+                        <button class="btn btn-primary" ng-click="getSankey()">查询</button>
+                    </form>
+                </div>
+            </div></div></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-solid">
+                <div class="box-header">
+                    <i class="fa fa-sort-amount-desc"></i>
+                    <h3 class="box-title ng-binding">路径分析图表</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" ng-click="reload(widget)"><i class="fa fa-refresh"></i>
+                        </button>
+                        <!-- ngIf: widgetCfg --><button type="button" class="btn btn-box-tool ng-scope" ng-if="widgetCfg" ng-click="config(widget)"><i class="fa fa-wrench"></i>
+                    </button><!-- end ngIf: widgetCfg -->
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" ng-click="modalChart(widget)"><i class="fa fa-square-o"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!--<div id="routeContent" class='conHeight' >-->
+                    <div id="funnelChart" class='conHeight' >
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

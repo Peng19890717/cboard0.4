@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.cboard.daokylin.KylinDao">
+
+    <!--从kylin中获取-->
+    <!--要不然全是只有事件名称，要不然全是只有-->
+    <!--同时要过滤视频源（这个可以先不过滤）、产品模块-->
+    <select id="getFunnelDatas" resultType="org.cboard.dto.sec.FunnelCube">
+        select
+        count( distinct deviceid ) val ,
+        <if test="flag">
+            <![CDATA[
+                    concat(concat(concat(data_source,'——'),concat(event_name,'——')),page_name) event_name
+                  ]]>
+        </if>
+        <if test="!flag">
+            <![CDATA[
+                    concat( concat(data_source,'——' ), event_name ) event_name
+                  ]]>
+        </if>
+        from SESSION_LOG6
+        where  <!--产品模块-->
+        (
+        <!--and pkg_source = #{1}数据源，本次先不过滤该字段-->
+        <if test="flag"><!--过滤事件英文名+页面中文名-->
+            <foreach collection="list" item="item" index="index" separator="or">
+                ( data_source = #{item.vpro_module} and event_name = #{item.vlog_name} and page_name =
+                #{item.vpage_name} )
+            </foreach>
+        </if>
+        <if test="!flag"><!--过滤事件英文名-->
+            <foreach collection="list" item="item" index="index" separator="or">
+                ( data_source = #{item.vpro_module} and event_name = #{item.vlog_name} )
+            </foreach>
+        </if>
+        )
+        and update_date between #{start_time} and #{end_time}
+        group by
+        <if test="flag">
+            <![CDATA[
+                    concat(concat(concat(data_source,'——'),concat(event_name,'——')),page_name)
+                  ]]>
+        </if>
+        <if test=" !flag ">
+            <![CDATA[
+                    concat( concat(data_source,'——' ), event_name )
+                  ]]>
+        </if>
+    </select>
+
+    <select id="getPathDatas" resultType="org.cboard.dto.sec.PathCube">
+        select
+        <if test="npv_uv==1"><!--统计pv-->
+            <![CDATA[
+            count( deviceid ) val ,
+            ]]>
+        </if>
+        <if test="npv_uv==2"><!--统计uv-->
+            <![CDATA[
+            count( distinct deviceid ) val ,
+            ]]>
+        </if>
+        <if test="condition==1">
+            concat( concat(data_source,'——') , event_name) target , <!--自己-->
+            concat(concat(parent_data_source,'——'),parent_event_name) source <!--爸爸-->
+        </if>
+        <if test="condition==2">
+            concat( concat(data_source,'——') , event_name) target , <!--自己-->
+            concat(concat(concat(parent_data_source,'——'),concat(parent_event_name,'——')),parent_page_name) source <!--爸爸-->
+
+        </if>
+        <if test="condition==3">
+            concat(concat(concat(data_source,'——'),concat(event_name,'——')),page_name) target ,  <!--自己-->
+            concat(concat(parent_data_source,'——'),parent_event_name) source <!--爸爸-->
+        </if>
+        <if test="condition==4">
+            concat(concat(concat(data_source,'——'),concat(event_name,'——')),page_name) target ,  <!--自己-->
+            concat(concat(concat(parent_data_source,'——'),concat(parent_event_name,'——')),parent_page_name) source <!--爸爸-->
+        </if>
+        from session_log6
+        where
+        (
+        <if test="condition==1">
+            <foreach collection="list" item="item" index="index" separator="or">
+                (
+                data_source = #{item.vpro_module} and event_name = #{item.vlog_name} <!--过滤自己-->
+                and parent_data_source = #{item.vparent_pro_module} and parent_event_name = #{item.vparent_log_name} <!--过滤父亲-->
+                )
+            </foreach>
+        </if>
+        <if test="condition==2">
+            <foreach collection="list" item="item" index="index" separator="or">
+                (
+                data_source = #{item.vpro_module} and event_name = #{item.vlog_name}  <!--过滤自己-->
+                and parent_data_source = #{item.vparent_pro_module} and parent_event_name = #{item.vparent_log_name} and parent_page_name = #{item.vparent_page_name}<!--过滤父亲-->
+                )
+            </foreach>
+        </if>
+        <if test="condition==3">
+            <foreach collection="list" item="item" index="index" separator="or">
+                ( data_source = #{item.vpro_module} and event_name = #{item.vlog_name} and page_name = #{item.vpage_name} <!--过滤自己-->
+                  and parent_data_source = #{item.vparent_pro_module} and parent_event_name = #{item.vparent_log_name}<!--过滤父亲-->
+                )
+            </foreach>
+        </if>
+        <if test="condition==4">
+            <foreach collection="list" item="item" index="index" separator="or">
+                (
+                data_source = #{item.vpro_module} and event_name = #{item.vlog_name} and page_name = #{item.vpage_name} <!--过滤自己-->
+                and parent_data_source = #{item.vparent_pro_module} and parent_event_name = #{item.vparent_log_name} and parent_page_name = #{item.vparent_page_name}<!--过滤父亲-->
+                )
+            </foreach>
+        </if>
+        )
+
+        <!--and pkg_source = #{1}数据源，本次先不过滤该字段-->
+        and update_date between #{start_time} and #{end_time}
+        group by
+
+        <if test="condition==1">
+            concat( concat(data_source,'——') , event_name) ,  <!--自己-->
+            concat(concat(parent_data_source,'——'),parent_event_name) <!--爸爸-->
+        </if>
+        <if test="condition==2">
+            concat( concat(data_source,'——') , event_name) ,  <!--自己-->
+            concat(concat(concat(parent_data_source,'——'),concat(parent_event_name,'——')),parent_page_name) <!--爸爸-->
+        </if>
+        <if test="condition==3">
+            concat(concat(concat(data_source,'——'),concat(event_name,'——')),page_name) , <!--自己-->
+            concat(concat(parent_data_source,'——'),parent_event_name) <!--爸爸-->
+        </if>
+        <if test="condition==4">
+            concat(concat(concat(data_source,'——'),concat(event_name,'——')),page_name) , <!--自己-->
+            concat(concat(concat(parent_data_source,'——'),concat(parent_event_name,'——')),parent_page_name) <!--爸爸-->
+        </if>
+
+    </select>
+
+
+</mapper>

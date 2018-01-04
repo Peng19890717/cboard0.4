@@ -1,0 +1,87 @@
+/*@charset "utf-8";*/
+/*!*base*!*/
+/**{-webkit-text-size-adjust:none;}!*用于清除移动设备浏览器自定义字体设置*!*/
+/** {box-sizing: border-box;}*/
+/**::before, *::after {box-sizing: border-box;}*/
+/*html, body, h1, h2, h3, h4, h5, input, button,select,label, form,textarea, p, span, a, div, ol, ul, li, dl, dt, dd, table, tbody, tfoot, thead, tr, th, td, canvas,i,img {margin:0; padding:0;}*/
+/*body {min-width: 320px;overflow-x: hidden;outline: none;color: #333;}*/
+/*input,button,textarea{font-family:"微软雅黑";outline: none;border:0 none; background: #fff; -webkit-box-shadow: none;box-shadow: none;-webkit-appearance: none;}*/
+/*input[type="submit"],input[type="reset"],input[type="button"],button,textarea{-webkit-appearance: none;border-radius: 0;}*/
+/*article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {display: block;}*/
+/*audio, canvas, progress, video {display: inline-block;vertical-align: baseline;}*/
+/*audio:not([controls]) {display: none;height: 0;}*/
+/*[hidden], template {display: none;}*/
+/*html,body{width: 100%;}*/
+/*body {*/
+    /*margin: 0;*/
+    /*background: #f0eff5;*/
+    /*font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"微软雅黑";*/
+    /*font-size: 14px;*/
+/*}*/
+
+/*a{text-decoration:none; color:#333;}*/
+/*a:active,a:hover{outline: 0 none;text-decoration: none;}*/
+/*a:link,a:visited{text-decoration: none;}*/
+/*a:hover{color: #2b98e7;}*/
+/*button{cursor: pointer;}*/
+/*a,button{-webkit-tap-highlight-color: rgba(0,0,0,0);}*/
+/*ol, ul{list-style:none;}*/
+/*img{border: 0 none;display: inline-block;}*/
+/*table{border-collapse:collapse; border-spacing:0;}*/
+/*em,i{font-style:normal;}*/
+/*.fl{float: left;display: inline;}*/
+/*.fr{float: right;display: inline;}*/
+/*.clear{clear: both;height: 0;font-size: 0;}*/
+/*.clearfix:after {content:"."; display:block; height:0; visibility:hidden; clear:both;}*/
+/*.clearfix{*zoom:1;}*/
+/*.bgfff{background-color: #fff;}*/
+/*.black{color: #000}*/
+/*.r-btn{background: #ef5511; color: #fff; height: 50px; width: 140px; text-align: center; line-height: 50px; cursor: pointer;}*/
+/*.container{width: 100%;height: 100%;}*/
+/*.plr10{padding-left: 10px;padding-right: 10px;}*/
+/*.ptb10{padding-top: 10px;padding-bottom: 10px;}*/
+/*.mt10{margin-top: 10px;}*/
+/*.mb10{margin-bottom: 10px}*/
+/*.mb76{margin-bottom: 76px}*/
+
+/*新增路径*/
+.path-form{background: #fff; padding:10px 0;}
+.path-form ul{}
+.path-form label{width: 100px; display: inline-block; text-align: right; font-weight: bold; height: 36px; line-height: 36px}
+.path-form input,.path-form select{border-radius: 0; box-shadow: none; border-color: #d2d6de; color: #555; background-color: #fff; border: 1px solid #ccc;height: 30px; padding: 5px 10px;  font-size: 12px; line-height: 1.5; width: 220px}
+.path-form select{width: auto; margin-right: 12px; margin-bottom: 10px}
+.path-form .step{margin: 0 10px; line-height: 36px}
+.step-two-box label{ float:left;}
+.add-step,.del-step{height: 30px; display: inline-block; line-height: 30px; margin-right:10px; cursor: pointer;}
+.add-step img{height: 26px; vertical-align: middle}
+.del-step img{height: 26px; vertical-align: middle}
+.step-box{display: inline-block; max-width: 610px; float:left;}
+.step-two select{ float:left;}
+.hint{height: 30px; line-height: 30px; width:270px; float:left;}
+.step-btn{margin-left: 162px;    background-color: #008d4c; color: #fff;}
+.submit-btn{margin-left: 162px; margin-top: 20px;       background-color: #dd4b39; color: #fff;}
+.route-btn{
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.step-two-box ul li{list-style: none}
+.funnel ul{padding-left:5px; width: 50% !important; padding-top: 5px}
+.funnel .jstree-icon{margin-right:5px}
+.red{color: #ff0000}
