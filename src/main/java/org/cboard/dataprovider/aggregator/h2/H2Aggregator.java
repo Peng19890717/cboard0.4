@@ -177,7 +177,7 @@ public class H2Aggregator extends InnerAggregator {
         }
         return columns.toArray(new String[]{});
     }
-
+    //时间变量这个参数会调用这个代码并且会加入时间参数
     @Override
     public AggregateResult queryAggData(AggConfig config) throws Exception {
         Stopwatch stopwatch = Stopwatch.createStarted();
