@@ -2,7 +2,7 @@
 <ng-include src="'org/cboard/view/dashboard/layout/header.html'"></ng-include>
 <div id="inner-container" class="content">
     <input ng-model="relations" ng-hide="true" id="relations"/> <!--json [{},{}]-->
-    <div class="row" ng-repeat="row in board.layout.rows track by $index" ng-style="{height:row.height+'px'}">
+    <div class="row" ng-repeat="row in board.layout.rows track by $index">
         <ng-switch on="row.type">
             <div ng-switch-when="param">
                 <div class="col-sm-12">
