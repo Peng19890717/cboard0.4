@@ -60,31 +60,36 @@ public class TableXlsProcesser extends XlsProcesser {
                 }
 
                 for (int j = colStart; j < colStart + deltaSpan; j++) {
-                    Cell cell = row.createCell(j);
+                    Cell cell = row.createCell(j);//单元格(Cell)
                     if ("header_key".equals(property) || "header_empty".equals(property)) {
                         cell.setCellStyle(context.getTableStyle());
                     } else if ("data".equals(property) || "column_key".equals(property)) {
                         cell.setCellStyle(context.gettStyle());
                     }
+                    /*给单元格赋值*/
                     if (j == colStart) {
-                        if ("data".equals(property)) {
-                            if (cData.getString("data") != null && cData.getString("data").contains("%")) {
-                                cell.setCellValue(cData.getDoubleValue("raw"));
-                                cell.setCellStyle(context.getPercentStyle());
+                        if ("data".equals(property)) {//每一行数据中property元素对应的值为data时
+                            if (cData.getString("data") != null && cData.getString("data").contains("%")) {//处理带百分号的数据
+                                //由于excel去掉合并列而改的DashboardController L396行 ，导致导出excel的时候，带百分号的导出来有问题，所以对下面进行修改 start
+//                                cell.setCellValue(cData.getDoubleValue("raw"));//这个是原来的
+                                double value = Double.valueOf(cData.getString("data").replace("%","")).doubleValue()/100;
+                                cell.setCellValue(value);
+                                //由于excel去掉合并列而改的DashboardController L396行 ，导致导出excel的时候，带百分号的导出来有问题，所以对下面进行修改 end
+                                cell.setCellStyle(context.getPercentStyle());//设置成
                             } else {
-                                cell.setCellValue(cData.getDoubleValue("raw"));
+                                //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
+                                String tmp = cData.getString("raw");
+                                if (tmp == null) {//表示这种数据被我改过了，所以要特殊处理（data有值，没有对应的raw）
+                                    cell.setCellValue(cData.getString("data"));
+                                } else {
+                                    cell.setCellValue(cData.getDoubleValue("raw"));
+                                }
+                                //modified by wbc start 2017-07-14 end
+//                                这个是原来的
+//                                cell.setCellValue(cData.getDoubleValue("raw"));
                             }
-                        } else {
-                            //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
-                            String tmp = cData.getString("raw");
-                            if (tmp == null) {//表示这种数据被我改过了，所以要特殊处理（data有值，没有对应的raw）
-                                cell.setCellValue(cData.getString("data"));
-                            } else {
-                                cell.setCellValue(cData.getDoubleValue("raw"));
-                            }
-                            //modified by wbc start 2017-07-14 end
-//                          这个是原来的
-//                          cell.setCellValue(cData.getDoubleValue("raw"));
+                        } else {//目前发现了这种值column_key（不知道还有没有其它值）
+                            cell.setCellValue(cData.getString("data"));
                         }
                     }
                 }

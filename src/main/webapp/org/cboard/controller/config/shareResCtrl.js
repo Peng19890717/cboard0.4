@@ -18,26 +18,15 @@ cBoard.controller('shareResCtrl', function ($scope, $http, ModalUtils, $filter) 
         id: 'Dashboard',
         text: translate('ADMIN.BOARD'),
         parent: '#',
-        icon: 'fa fa-dashboard fa-lg',
-        state: {
-            disabled: true
-        }
+        state: {disabled: true}
     }, {
-        id: 'Dataset',
-        text: translate('ADMIN.DATASET'),
-        parent: '#',
-        icon: 'fa fa-cubes fa-lg',
-        state: {
-            disabled: true
-        }
+        id: 'Dataset', text: translate('ADMIN.DATASET'), parent: '#',
+        state: {disabled: true}
     }, {
         id: 'Widget',
         text: translate('ADMIN.WIDGET'),
         parent: '#',
-        icon: 'fa fa-bar-chart-o fa-lg',
-        state: {
-            disabled: true
-        }
+        state: {disabled: true}
     }];
 
     var getBoardList = function () {
@@ -102,9 +91,9 @@ cBoard.controller('shareResCtrl', function ($scope, $http, ModalUtils, $filter) 
                         listOut.push({
                             "id": 'parent' + '_' + type + '_' + newParentId,
                             "parent": parent,
-                            "text": a
+                            "text": a,
                             /*icon: 'fa fa-fw fa-folder-o',*/
-                            //,state: {disabled: true}
+                            state: {disabled: true}
                         });
                     }
                     parent = 'parent' + '_' + type + '_' + newParentId;
@@ -133,13 +122,13 @@ cBoard.controller('shareResCtrl', function ($scope, $http, ModalUtils, $filter) 
                     worker: true
                 },
                 checkbox: {
-                    three_state: true
+                    three_state: false
                 },
                 version: 1,
-                plugins: ['types', 'checkbox', 'unique']
+                plugins: ['types', 'unique']
             };
             _.delay(function () {
-                $scope.treeInstance.jstree(true);
+                $scope.treeInstance.jstree(true).open_all();
             }, 500);
         });
     }();
@@ -194,13 +183,7 @@ cBoard.controller('shareResCtrl', function ($scope, $http, ModalUtils, $filter) 
                 return e.roleId == r;
             })
         });
-    };
 
-    $scope.jstree_open_all = function () {
-        $scope.treeInstance.jstree(true).open_all();
-    };
-    
-    $scope.jstree_close_all = function () {
-        $scope.treeInstance.jstree(true).close_all();
+
     }
 });

@@ -16,9 +16,8 @@ import org.cboard.dto.DataProviderResult;
 import org.cboard.exception.CBoardException;
 import org.cboard.pojo.DashboardDataset;
 import org.cboard.pojo.DashboardDatasource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -31,15 +30,13 @@ import java.util.function.Predicate;
 @Repository
 public class DataProviderService {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     private DatasourceDao datasourceDao;
 
     @Autowired
     private DatasetDao datasetDao;
 
-    private int resultLimit=1000000;//设置为100w，否则前段界面渲染时会崩溃
+    private int resultLimit=300000;//设置为30w，否则前段界面渲染时会崩溃
 
     //根据数据源，sql获取相应的数据（返回的结果其实是二维数组）
     public DataProviderResult getData(Long datasourceId, Map<String, String> query, Long datasetId) {
@@ -91,7 +88,7 @@ public class DataProviderService {
             DataProvider dataProvider = getDataProvider(datasourceId, query, dataset);
             return dataProvider.getAggData(config, reload);
         } catch (Exception e) {
-            LOG.error("", e);
+            e.printStackTrace();
             throw new CBoardException(e.getMessage());
         }
     }
@@ -105,7 +102,7 @@ public class DataProviderService {
             dps.setColumns(result);
             dps.setMsg("1");
         } catch (Exception e) {
-            LOG.error("", e);
+            e.printStackTrace();
             dps.setMsg(e.getMessage());
         }
         return dps;
@@ -113,13 +110,13 @@ public class DataProviderService {
 
     public String[] getDimensionValues(Long datasourceId, Map<String, String> query, Long datasetId, String columnName, AggConfig config, boolean reload) {
         try {
-            Dataset dataset = getDataset(datasetId);
+            Dataset dataset = getDataset(datasetId);//获取数据集信息（数据源+对应的sql）
             attachCustom(dataset, config);
-            DataProvider dataProvider = getDataProvider(datasourceId, query, dataset);
-            String[] result = dataProvider.getDimVals(columnName, config, reload);
+            DataProvider dataProvider = getDataProvider(datasourceId, query, dataset);//获取DataProvider，不同的连接方式(Jdbc连接)用的是不同的DataProvider
+            String[] result = dataProvider.getDimVals(columnName, config, reload);//获取维度列（=查询条件）对应的去重后的值
             return result;
         } catch (Exception e) {
-            LOG.error("", e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -131,33 +128,19 @@ public class DataProviderService {
             DataProvider dataProvider = getDataProvider(datasourceId, query, dataset);
             return dataProvider.getViewAggDataQuery(config);
         } catch (Exception e) {
-            LOG.error("", e);
+            e.printStackTrace();
             throw new CBoardException(e.getMessage());
         }
     }
 
     public ServiceStatus test(JSONObject dataSource, Map<String, String> query) {
         try {
-            DataProvider dataProvider = DataProviderManager.getDataProvider(
-                    dataSource.getString("type"),
-                    Maps.transformValues(dataSource.getJSONObject("config"), Functions.toStringFunction()),
-                    query, true);
-            dataProvider.test();
+            DataProvider dataProvider = DataProviderManager.getDataProvider(dataSource.getString("type"),
+                    Maps.transformValues(dataSource.getJSONObject("config"), Functions.toStringFunction()), query);
+            dataProvider.getData();
             return new ServiceStatus(ServiceStatus.Status.Success, null);
         } catch (Exception e) {
-            LOG.error("", e);
             return new ServiceStatus(ServiceStatus.Status.Fail, e.getMessage());
-        }
-    }
-
-    public boolean isDataSourceAggInstance(Long datasourceId, Map<String, String> query, Long datasetId) {
-        try {
-            Dataset dataset = getDataset(datasetId);
-            DataProvider dataProvider = getDataProvider(datasourceId, query, dataset);
-            return dataProvider.isDataSourceAggInstance();
-        } catch (Exception e) {
-            LOG.error("", e);
-            throw new CBoardException(e.getMessage());
         }
     }
 

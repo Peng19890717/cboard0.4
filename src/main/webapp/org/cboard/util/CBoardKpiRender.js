@@ -13,8 +13,7 @@ CBoardKpiRender.prototype.html = function (persist) {
             html2canvas(self.container, {
                 onrendered: function (canvas) {
                     persist.data = canvas.toDataURL("image/jpeg");
-                    persist.type = "jpg";
-                    persist.widgetType = "kpi";
+                    persist.type = "jpg"
                 }
             });
         }, 1000);

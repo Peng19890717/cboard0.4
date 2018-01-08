@@ -50,8 +50,8 @@ cBoard.controller('paramCtrl', function ($scope, $uibModal, $http) {
     $scope.init = function () {
         $scope.param = $scope.$parent.param;
         $scope.param.selects = [];
-        if(!$scope.param.type) $scope.param.type = '=';
-        if(!$scope.param.values) $scope.param.values = [];
+        $scope.param.type = '=';
+        $scope.param.values = [];
         if ($scope.param.paramType == 'slider') {
             var cfg = $scope.param.cfg;
             var _max = evalValue(_.result(cfg, 'max', null));
@@ -129,40 +129,6 @@ cBoard.controller('paramCtrl', function ($scope, $uibModal, $http) {
         $scope.$emit('paramInitFinish', $scope.param);
     };
 
-    $scope.editParam = function () {
-        $uibModal.open({
-            templateUrl: 'org/cboard/view/dashboard/modal/param.html',
-            windowTemplateUrl: 'org/cboard/view/util/modal/window.html',
-            backdrop: false,
-            size: 'lg',
-            resolve: {
-                param: function () {
-                    if ($scope.param) {
-                        return angular.copy($scope.param);
-                    } else {
-                        return {type: '='}
-                    }
-                },
-                filter: function () {
-                    return false;
-                },
-                getSelects: function () {
-                    return function (byFilter, column, callback) {
-                        callback($scope.param.selects);
-                    };
-                },
-                ok: function () {
-                    return function (param) {
-                        $scope.param.values = param.values;
-                        $scope.param.type = param.type;
-                        $scope.applyParamFilter();
-                    }
-                }
-            },
-            controller: 'paramSelector'
-        });
-    };
-
     $scope.editParamDate = function () {
         $uibModal.open({
             templateUrl: 'org/cboard/view/dashboard/modal/paramDate.html',
@@ -196,51 +162,84 @@ cBoard.controller('paramCtrl', function ($scope, $uibModal, $http) {
             controller: 'paramSelector'
         });
     };
+    $scope.editParam = function () {
+        $uibModal.open({
+            templateUrl: 'org/cboard/view/dashboard/modal/param.html',
+            windowTemplateUrl: 'org/cboard/view/util/modal/window.html',
+            backdrop: false,
+            size: 'lg',
+            resolve: {
+                param: function () {
+                    if ($scope.param) {
+                        return angular.copy($scope.param);
+                    } else {
+                        return {type: '='}
+                    }
+                },
+                filter: function () {
+                    return false;
+                },
+                getSelects: function () {
+                    return function (byFilter, column, callback) {
+                        callback($scope.param.selects);
+                    };
+                },
+                ok: function () {
+                    return function (param) {
+                       // debugger;
+                        $scope.param.values = param.values;
+                        $scope.param.type = param.type;
+                        $scope.applyParamFilter();
+                    }
+                }
+            },
+            controller: 'paramSelector'
+        });
+    };
+
+
 
 //时间控件
 
 //getRouteChart("funnelChart");
 //时间插件
-    $scope.date={startDate: null, endDate: null};
-    $scope.opts = {
-        locale: {
-            applyClass: 'btn-green',
-            applyLabel: "确定",
-            fromLabel: "From",
-            toLabel: "To",
-            cancelLabel: '取消',
-            customRangeLabel: '自定义日期范围',
-            daysOfWeek: ["日","一","二","三","四","五","六"],
-            firstDay: 1,
-            monthNames: ["一月","二月","三月","四月","五月","六月","7月","八月","九月","十月","十一月","十二月"]
-        },
-        ranges: {
-            '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            '今天': [moment().subtract(0, 'days'), moment().subtract(0, 'days')],
-            '过去7天': [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
-            // '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            '过去30天': [moment().subtract(30, 'days'), moment().subtract(1, 'days')],
-            // '过去60天': [moment().subtract(60, 'days'), moment().subtract(1, 'days')]
-        },
-        eventHandlers:{
-            'apply.daterangepicker':function (ev,picker) {
-                var timeArr=$("input.date-picker[flag='"+$scope.param.$$hashKey+"']").eq(0).val().split(" - ");
-                if($scope.param.selects[0].indexOf("-")>=0)
-                    $scope.param.values =timeArr;
-                else{
-                    if(timeArr.length==2){
-                        $scope.param.values=[timeArr[0].replace(/-/g,""),timeArr[1].replace(/-/g,"")]
-                    }
+$scope.date={startDate: null, endDate: null};
+$scope.opts = {
+    locale: {
+        applyClass: 'btn-green',
+        applyLabel: "确定",
+        fromLabel: "From",
+        toLabel: "To",
+        cancelLabel: '取消',
+        customRangeLabel: '自定义日期范围',
+        daysOfWeek: ["日","一","二","三","四","五","六"],
+        firstDay: 1,
+        monthNames: ["一月","二月","三月","四月","五月","六月","7月","八月","九月","十月","十一月","十二月"]
+    },
+    ranges: {
+        '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        '今天': [moment().subtract(0, 'days'), moment().subtract(0, 'days')],
+        '过去7天': [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
+        // '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        '过去30天': [moment().subtract(30, 'days'), moment().subtract(1, 'days')],
+        // '过去60天': [moment().subtract(60, 'days'), moment().subtract(1, 'days')]
+    },
+    eventHandlers:{
+        'apply.daterangepicker':function (ev,picker) {
+            var timeArr=$("input.date-picker[flag='"+$scope.param.$$hashKey+"']").eq(0).val().split(" - ");
+            if($scope.param.selects[0].indexOf("-")>=0)
+            $scope.param.values =timeArr;
+            else{
+                if(timeArr.length==2){
+                    $scope.param.values=[timeArr[0].replace(/-/g,""),timeArr[1].replace(/-/g,"")]
                 }
-                $scope.param.type ='[a,b]';
-                $scope.applyParamFilter();
-            },
-            'show.daterangepicker':function () {
-                $scope.maxDate=moment($scope.param.selects[$scope.param.selects.length-1]).add('days',1).format('YYYY-MM-DD');
             }
+            $scope.param.type ='[a,b]';
+            $scope.applyParamFilter();
+        },
+        'show.daterangepicker':function () {
+            $scope.maxDate=moment($scope.param.selects[$scope.param.selects.length-1]).add('days',1).format('YYYY-MM-DD');
         }
-    };
-
+    }
+};
 });
-
-

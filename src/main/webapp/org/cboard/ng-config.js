@@ -5,11 +5,6 @@
 
 angular.module('cBoard').config(['$stateProvider', function ($stateProvider) {
     $stateProvider
-        .state('home', {
-            url: '',
-            templateUrl: 'org/cboard/view/cboard/homepage.html',
-            controller: 'homepageCtrl'
-        })
         .state('dashboard', {
             url: '/dashboard',
             abstract: true,
@@ -44,20 +39,18 @@ angular.module('cBoard').config(['$stateProvider', function ($stateProvider) {
             template: '<div ui-view></div>'
         })
         .state('config.board', {
-            url: '/board/{boardId}',
-            params: {boardId: null},
+            url: '/board',
             templateUrl: 'org/cboard/view/config/board.html',
             controller: 'boardCtrl'
         })
         .state('config.widget', {
-            url: '/widget?id&datasetId',
-            params: {id: null, datasetId: null},
+            url: '/widget',
+            params: {id: null},
             templateUrl: 'org/cboard/view/config/widget.html',
             controller: 'widgetCtrl'
         })
         .state('config.datasource', {
-            url: '/datasource/{id}',
-            params: {id: null},
+            url: '/datasource',
             templateUrl: 'org/cboard/view/config/datasource.html',
             controller: 'datasourceCtrl'
         })
@@ -67,30 +60,9 @@ angular.module('cBoard').config(['$stateProvider', function ($stateProvider) {
             controller: 'categoryCtrl'
         })
         .state('config.dataset', {
-            url: '/dataset/{id}',
-            params: {id: null},
+            url: '/dataset',
             templateUrl: 'org/cboard/view/config/dataset.html',
             controller: 'datasetCtrl'
-        })
-        .state('config.job', {
-            url: '/job',
-            templateUrl: 'org/cboard/view/config/job.html',
-            controller: 'jobCtrl'
-        })
-        .state('config.role', {
-            url: '/role',
-            templateUrl: 'org/cboard/view/config/shareResource.html',
-            controller: 'shareResCtrl'
-        })
-        .state('admin', {
-            url: '/admin',
-            abstract: true,
-            template: '<div ui-view></div>'
-        })
-        .state('admin.user', {
-            url: '/user',
-            templateUrl: 'org/cboard/view/admin/user.html',
-            controller: 'userAdminCtrl'
         })
         .state('config.customFunnel', {
             url: '/customFunnel',
@@ -126,6 +98,26 @@ angular.module('cBoard').config(['$stateProvider', function ($stateProvider) {
             url: '/menuSort',
             templateUrl: 'org/cboard/view/config/menuSort.html',
             controller: 'menuSortCtrl'
+        })
+        .state('config.job', {
+            url: '/job',
+            templateUrl: 'org/cboard/view/config/job.html',
+            controller: 'jobCtrl'
+        })
+        .state('config.role', {
+            url: '/role',
+            templateUrl: 'org/cboard/view/config/shareResource.html',
+            controller: 'shareResCtrl'
+        })
+        .state('admin', {
+            url: '/admin',
+            abstract: true,
+            template: '<div ui-view></div>'
+        })
+        .state('admin.user', {
+            url: '/user',
+            templateUrl: 'org/cboard/view/admin/user.html',
+            controller: 'userAdminCtrl'
         });
 
 }]);

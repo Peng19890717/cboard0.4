@@ -2,16 +2,13 @@
  * Created by yfyuan on 2016/10/28.
  */
 'use strict';
-cBoard.service('chartSankeyService', function ($state, $window) {
+cBoard.service('chartSankeyService', function () {
 
-    this.render = function (containerDom, option, scope, persist, drill, relations, chartConfig) {
-        var render = new CBoardEChartRender(containerDom, option);
-        render.addClick(chartConfig, relations, $state, $window);
-        return render.chart(null, persist);
+    this.render = function (containerDom, option, scope, persist) {
+        return new CBoardEChartRender(containerDom, option).chart(null, persist);
     };
 
     this.parseOption = function (data) {
-        var chartConfig = data.chartConfig;
         var casted_keys = data.keys;
         var casted_values = data.series;
         var aggregate_data = data.data;
@@ -71,16 +68,6 @@ cBoard.service('chartSankeyService', function ($state, $window) {
                 }
             }]
         };
-
-        var tunningOpt = chartConfig.option;
-        if (tunningOpt) {
-            if (tunningOpt.legendShow == false) {
-                echartOption.grid = echartsBasicOption.grid;
-                echartOption.grid.top = '5%';
-                echartOption.legend.show =false;
-            }
-        }
-
         return echartOption;
     };
 });

@@ -2,12 +2,10 @@
  * Created by yfyuan on 2016/8/12.
  */
 'use strict';
-cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $uibModal, dataService, ModalUtils, updateService, $filter, chartService, $timeout) {
+cBoard.controller('widgetCtrl', function ($scope, $stateParams, $http, $uibModal, dataService, ModalUtils, updateService, $filter, chartService, $timeout) {
 
         var translate = $filter('translate');
         var updateUrl = "dashboard/updateWidget.do";
-        $scope.liteMode = false;
-        $scope.tab = 'preview_widget2';
         //图表类型初始化
         $scope.chart_types = [
             {
@@ -23,15 +21,9 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE')
             },
             {
-                name: translate('CONFIG.WIDGET.CONTRAST'), value: 'contrast', class: 'cContrast',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_2')
-            },
-            {
                 name: translate('CONFIG.WIDGET.SCATTER'), value: 'scatter', class: 'cScatter',
                 row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0_MORE'),
+                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
                 measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE')
             },
             {
@@ -48,7 +40,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             },
             {
                 name: translate('CONFIG.WIDGET.FUNNEL'), value: 'funnel', class: 'cFunnel',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0_MORE'),
+                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
                 column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
                 measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE')
             },
@@ -69,75 +61,12 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
                 column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0_MORE'),
                 measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE')
-            },
-            {
-                name: translate('CONFIG.WIDGET.GAUGE'), value: 'gauge', class: 'cGauge',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
-            },
-            {
-                name: translate('CONFIG.WIDGET.WORD_CLOUD'), value: 'wordCloud', class: 'cWordCloud',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
-            },
-            {
-                name: translate('CONFIG.WIDGET.TREE_MAP'), value: 'treeMap', class: 'cTreeMap',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
-            },
-            {
-                name: translate('CONFIG.WIDGET.HEAT_MAP_CALENDER'), value: 'heatMapCalendar', class: 'cHeatMapCalendar',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
-            },
-            {
-                name: translate('CONFIG.WIDGET.HEAT_MAP_TABLE'), value: 'heatMapTable', class: 'cHeatMapTable',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
-            },
-            {
-                name: translate('CONFIG.WIDGET.LIQUID_FILL'), value: 'liquidFill', class: 'cLiquidFill',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
-            },
-            {
-                name: translate('CONFIG.WIDGET.AREA_MAP'), value: 'areaMap', class: 'cAreaMap',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0_MORE'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
-            },
-            {
-                name: translate('CONFIG.WIDGET.CHINA_MAP'), value: 'chinaMap', class: 'cChinaMap',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0_MORE'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE')
-            },
-            {
-                name: translate('CONFIG.WIDGET.CHINA_MAP_BMAP'), value: 'chinaMapBmap', class: 'cChinaMapBmap',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_0_MORE'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_MORE')
-            },
-            {
-                name: translate('CONFIG.WIDGET.RELATION'), value: 'relation', class: 'cRelation',
-                row: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_2'),
-                column: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1_2'),
-                measure: translate('CONFIG.WIDGET.TIPS_DIM_NUM_1')
             }
         ];
 
         $scope.chart_types_status = {
             "line": true, "pie": true, "kpi": true, "table": true,
-            "funnel": true, "sankey": true, "radar": true, "map": true,
-            "scatter": true, "gauge": true, "wordCloud": true, "treeMap": true,
-            "heatMapCalendar": true, "heatMapTable": true, "liquidFill": true,
-            "areaMap": true, "contrast": true,"chinaMap":true,"chinaMapBmap":true,"relation":true
+            "funnel": true, "sankey": true, "radar": true, "map": true, "scatter": true
         };
 
         $scope.value_series_types = [
@@ -145,12 +74,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             {name: translate('CONFIG.WIDGET.BAR'), value: 'bar'},
             {name: translate('CONFIG.WIDGET.STACKED_BAR'), value: 'stackbar'},
             {name: translate('CONFIG.WIDGET.PERCENT_BAR'), value: 'percentbar'}
-        ];
-
-        $scope.china_map_types = [
-            {name: translate('CONFIG.WIDGET.SCATTER_MAP'), value: 'scatter'},
-            {name: translate('CONFIG.WIDGET.HEAT_MAP'), value: 'heat'},
-            {name: translate('CONFIG.WIDGET.MARK_LINE_MAP'), value: 'markLine'}
         ];
 
         $scope.value_aggregate_types = [
@@ -169,85 +92,17 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             {name: translate('CONFIG.WIDGET.YELLOW'), value: 'bg-yellow'}
         ];
 
-        $.getJSON('plugins/FineMap/mapdata/citycode.json', function (data) {
-            $scope.provinces = data.provinces;
-        });
-
-
-
-        $scope.treemap_styles = [
-            {name: translate('CONFIG.WIDGET.RANDOM'), value: 'random'},
-            {name: translate('CONFIG.WIDGET.MULTI'), value: 'multi'},
-            {name: translate('CONFIG.WIDGET.BLUE'), value: 'blue'},
-            {name: translate('CONFIG.WIDGET.RED'), value: 'red'},
-            {name: translate('CONFIG.WIDGET.GREEN'), value: 'green'},
-            {name: translate('CONFIG.WIDGET.YELLOW'), value: 'yellow'},
-            {name: translate('CONFIG.WIDGET.PURPLE'), value: 'purple'}
-        ];
-
-        $scope.heatmap_styles = [
-            {name: translate('CONFIG.WIDGET.BLUE'), value: 'blue'},
-            {name: translate('CONFIG.WIDGET.RED'), value: 'red'},
-            {name: translate('CONFIG.WIDGET.GREEN'), value: 'green'},
-            {name: translate('CONFIG.WIDGET.YELLOW'), value: 'yellow'},
-            {name: translate('CONFIG.WIDGET.PURPLE'), value: 'purple'}
-        ];
-
-        $scope.heatmap_date_format = [
-            {name: 'yyyy-MM-dd', value: 'yyyy-MM-dd'},
-            {name: 'yyyy/MM/dd', value: 'yyyy/MM/dd'},
-            {name: 'yyyyMMdd', value: 'yyyyMMdd'}
-        ];
-
-        $scope.liquid_fill_style = [
-            {name: translate('CONFIG.WIDGET.CIRCLE'), value: 'circle'},
-            {name: translate('CONFIG.WIDGET.PIN'), value: 'pin'},
-            {name: translate('CONFIG.WIDGET.RECT'), value: 'rect'},
-            {name: translate('CONFIG.WIDGET.ARROW'), value: 'arrow'},
-            {name: translate('CONFIG.WIDGET.TRIANGLE'), value: 'triangle'},
-            {name: translate('CONFIG.WIDGET.ROUND_RECT'), value: 'roundRect'},
-            {name: translate('CONFIG.WIDGET.SQUARE'), value: 'square'},
-            {name: translate('CONFIG.WIDGET.DIAMOND'), value: 'diamond'}
-        ];
-
-        /***************************************
-         *  0:  None items
-         *  1:  only 1 item
-         * -1:  None Restrict
-         *  2:  1 or more
-         ***************************************/
         $scope.configRule = {
-            line: {keys: 2, groups: -1, filters: -1, values: 2},
-            pie: {keys: 2, groups: -1, filters: -1, values: 2},
-            kpi: {keys: 0, groups: 0, filters: -1, values: 1},
-            table: {keys: -1, groups: -1, filters: -1, values: -1},
-            funnel: {keys: -1, groups: 0, filters: -1, values: 2},
-            sankey: {keys: 2, groups: 2, filters: -1, values: 1},
-            radar: {keys: 2, groups: -1, filters: -1, values: 2},
-            map: {keys: 2, groups: -1, filters: -1, values: 2},
-            scatter: {keys: 2, groups: -1, filters: -1, values: 2},
-            gauge: {keys: 0, groups: 0, filters: -1, values: 1},
-            wordCloud: {keys: 2, groups: 0, filters: -1, values: 1},
-            treeMap: {keys: 2, groups: 0, filters: -1, values: 1},
-            areaMap: {keys: 2, groups: -1, filters: -1, values: 1},
-            heatMapCalendar: {keys: 1, groups: 0, filters: -1, values: 1},
-            heatMapTable: {keys: 2, groups: 2, filters: -1, values: 1},
-            liquidFill: {keys: 0, groups: 0, filters: -1, values: 1},
-            contrast: {keys: 1, groups: 0, filters: -1, values: 2},
-            chinaMap:{keys: 2, groups: -1, filters: -1, values: 2},
-            chinaMapBmap:{keys: 2, groups: -1, filters: -1, values: 2},
-            relation: {keys: 2, groups: 2, filters: -1, values: 1}
+            line: {keys: 0, groups: 0, filters: 0, values: 0},
+            pie: {keys: 0, groups: 0, filters: 0, values: 0},
+            kpi: {keys: -1, groups: -1, filters: 0, values: 1},
+            table: {keys: 0, groups: 0, filters: 0, values: 0},
+            funnel: {keys: 0, groups: -1, filters: 0, values: 0},
+            sankey: {keys: 0, groups: 0, filters: 0, values: 1},
+            radar: {keys: 0, groups: 0, filters: 0, values: 0},
+            map: {keys: 0, groups: 0, filters: 0, values: 0},
+            scatter: {keys: 0, groups: 0, filters: 0, values: 0},
         };
-
-        $scope.switchLiteMode = function (mode) {
-            if (mode) {
-                $scope.liteMode = mode;
-                $scope.$parent.$parent.liteMode = mode;
-            } else {
-                $scope.liteMode = !$scope.liteMode;
-                $scope.$parent.$parent.liteMode = $scope.liteMode;
-            }
-        }
 
         //界面控制
         $scope.loading = false;
@@ -269,8 +124,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         $scope.loadFromCache = true;
         $scope.filterSelect = {};
         $scope.verify = {widgetName: true};
-        $scope.params = [];
-        $scope.curDataset;
 
 
         var loadDataset = function (callback) {
@@ -282,6 +135,9 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
         };
         loadDataset();
+        // $http.get("dashboard/getDatasetCategoryList.do").success(function (response) {
+        //     $scope.datasetCategoryList = response;
+        // });
 
         $http.get("dashboard/getDatasourceList.do").success(function (response) {
             $scope.datasourceList = response;
@@ -291,23 +147,9 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                     $scope.editWgt(_.find($scope.widgetList, function (w) {
                         return w.id == $stateParams.id;
                     }));
-                } else if ($stateParams.id == null && $stateParams.datasetId) {
-                    $scope.newWgt({datasetId: parseInt($stateParams.datasetId)});
-                    $scope.loadData();
                 }
             });
         });
-
-        $scope.getCurDatasetName = function() {
-            if ($scope.customDs) {
-                return translate('CONFIG.WIDGET.NEW_QUERY');
-            } else {
-                var curDS = _.find($scope.datasetList, function (ds) {
-                    return ds.id == $scope.curWidget.datasetId;
-                });
-                return curDS ? curDS.name : null;
-            }
-        }
 
         $scope.datasetGroup = function (item) {
             return item.categoryName;
@@ -332,13 +174,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
         };
 
-        $scope.viewExp = function(exp) {
-            ModalUtils.alert({title: translate('CONFIG.COMMON.CUSTOM_EXPRESSION') + ': ' + exp.alias, body: exp.exp},
-                "modal-info", 'lg');
-        }
-
         $scope.editExp = function (col) {
-            var columnObjs = schemaToSelect($scope.schema);
+            var selects = schemaToSelect($scope.schema);
             var aggregate = $scope.value_aggregate_types;
             var curWidget = $scope.curWidget;
             var ok;
@@ -365,28 +202,56 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 windowTemplateUrl: 'org/cboard/view/util/modal/window.html',
                 backdrop: false,
                 size: 'lg',
-                scope: $scope,
                 controller: function ($scope, $uibModalInstance) {
                     $scope.data = data;
                     $scope.curWidget = curWidget;
-                    $scope.columnObjs = columnObjs;
+                    $scope.selects = selects;
                     $scope.aggregate = aggregate;
-                    $scope.expressions = curWidget.expressions;
                     $scope.alerts = [];
                     $scope.close = function () {
                         $uibModalInstance.close();
                     };
-                    var columns = _.map(columnObjs, function (o) { return o.column; });
-                    $scope.expAceOpt = expEditorOptions($scope.selects, aggregate, function(_editor) {
-                        $scope.expAceEditor = _editor;
-                        $scope.expAceSession = _editor.getSession();
-                        _editor.focus();
-                    });
+                    $scope.expAceOpt = expEditorOptions(selects, aggregate);
                     $scope.addToken = function (str, agg) {
-                        var editor = $scope.expAceEditor;
-                        editor.session.insert(editor.getCursorPosition(), str);
-                        editor.focus();
-                        if (agg) editor.getSelection().moveCursorLeft();
+                        var tc = document.getElementById("expression_area1");
+                        var tclen = $scope.data.expression.length;
+                        tc.focus();
+                        var selectionIdx = 0;
+                        if (typeof document.selection != "undefined") {
+                            document.selection.createRange().text = str;
+                            selectionIdx = str.length - 1;
+                        }
+                        else {
+                            var a = $scope.data.expression.substr(0, tc.selectionStart);
+                            var b = $scope.data.expression.substring(tc.selectionStart, tclen);
+                            $scope.data.expression = a + str;
+                            $scope.data.expression += b;
+                            selectionIdx = $scope.data.expression.length - 1;
+                        }
+                        if (!agg) {
+                            selectionIdx++;
+                        }
+                        tc.selectionStart = selectionIdx;
+                        tc.selectionEnd = selectionIdx;
+                    };
+
+                    $scope.addToken1=function (str) {
+                        var obj = document.getElementById('expression_area1');
+                        if (document.selection) { //ie
+                            obj.focus();
+                            document.selection.createRange().text = str;
+                        } else if (typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') { //非ie
+                            var startPos = obj.selectionStart,
+                                endPos = obj.selectionEnd,
+                                cursorPos = startPos,
+                                tmpStr = obj.value;
+                            obj.value = tmpStr.substring(0, startPos) + str + tmpStr.substring(endPos, tmpStr.length);
+                            cursorPos += str.length;
+                            obj.selectionStart = obj.selectionEnd = cursorPos;
+                        } else {
+                            obj.value += str;
+                        }
+                        $scope.data.expression=obj.value;
                     };
                     $scope.verify = function () {
                         $scope.alerts = [];
@@ -401,7 +266,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                             ModalUtils.alert(translate('CONFIG.WIDGET.ALIAS') + translate('COMMON.NOT_EMPTY'), "modal-warning", "lg");
                             return;
                         }
-                        $scope.data.expression = $scope.expAceSession.getValue();
                         ok($scope.data);
                         $uibModalInstance.close();
                     };
@@ -410,6 +274,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.loadData = function () {
+
             $scope.toChartDisabled = false;
             $scope.newConfig();
             $scope.filterSelect = {};
@@ -420,16 +285,11 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 loadDsFilterGroups();
                 buildSchema();
             });
-            cleanPreview();
         };
 
-        $scope.newWgt = function (curWidget) {
+        $scope.newWgt = function () {
             $scope.curWidget = {};
-            if (curWidget) {
-                $scope.curWidget = curWidget;
-            }
             $scope.curWidget.config = {};
-            $scope.curWidget.config.option = {};
             $scope.curWidget.expressions = [];
             $scope.curWidget.filterGroups = [];
             $scope.curWidget.query = {};
@@ -440,8 +300,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $scope.optFlag = 'new';
             $scope.customDs = false;
             $scope.schema = null;
-            $scope.liteMode = false;
-            cleanPreview();
             addValidateWatch();
         };
 
@@ -466,7 +324,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                     return ds.id == $scope.curWidget.datasetId;
                 }).data.expressions;
                 var exp = _.find(dsExp, function (e) {
-                    return (e.id && o.id == e.id) || o.alias == e.alias;
+                    return e.id && o.id == e.id;
                 });
                 return !_.isUndefined(exp);
             }
@@ -504,20 +362,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $scope.$watch('curWidget.config.groups', changeChartStatus, true);
             $scope.$watch('curWidget.config.values', changeChartStatus, true);
             $scope.$watch('curWidget.config.filters', changeChartStatus, true);
-            addHelpMessage();
             addValidateWatch();
-        };
-
-        var addHelpMessage = function () {
-            var rowKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".ROW";
-            var columnKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".COLUMN";
-            var filterKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".FILTER";
-            var valueKey = 'HELP_MESSAGE.' + $scope.curWidget.config.chart_type.toUpperCase() + ".VALUE";
-            var row = translate(rowKey) == rowKey ? null : translate(rowKey);
-            var column = translate(columnKey) == columnKey ? null : translate(columnKey);
-            var filter = translate(filterKey) == filterKey ? null : translate(filterKey);
-            var value = translate(valueKey) == valueKey ? null : translate(valueKey);
-            $scope.helpMessage = {row: row, column: column, filter: filter, value: value};
         };
 
         var addValidateWatch = function () {
@@ -547,61 +392,34 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 }];
                 return false;
             }
-            if ($scope.customDs == true) {
-                for (var i = 0; i < $scope.params.length; i++) {
-                    var name = $scope.params[i].name;
-                    var label = $scope.params[i].label;
-                    var required = $scope.params[i].required;
-                    var value = $scope.curWidget.query[name];
-                    if (required == true && value != 0 && (value == undefined || value == "")) {
-                        var pattern = /([\w_\s\.]+)/;
-                        var msg = pattern.exec(label);
-                        if (msg && msg.length > 0)
-                            msg = translate(msg[0]);
-                        else
-                            msg = label;
-                        $scope.alerts = [{msg: "[" + msg + "]" + translate('COMMON.NOT_EMPTY'), type: 'danger'}];
-                        $scope.verify[name] = false;
-                        return false;
-                    }
-                }
-            }
             return true;
         };
-
         var changeChartStatus = function () {
             for (var type in $scope.chart_types_status) {
                 var rule = $scope.configRule[type];
                 var config = $scope.curWidget.config;
-                var flattenValues = [];
-                _.each(config.values, function (v) {
-                    flattenValues = flattenValues.concat(v.cols);
-                });
-                if (_.size(config.keys) == 0 && _.size(config.groups) == 0 && _.size(flattenValues) == 0) {
-                    r = false;
-                } else {
-                    for (var k in rule) {
-                        var r = true;
-                        if (rule[k] == 2) {
-                            if (k == 'values') {
-                                r = (_.size(flattenValues) >= 1);
-                                if (type == 'contrast') {
-                                    r = (_.size(flattenValues) == 2); //限制values数量为2
-                                }
-                            } else {
-                                r = (_.size(config[k]) >= 1);
-                            }
-                        } else if (rule[k] != -1) {
-                            if (k == 'values') {
-                                r = (_.size(flattenValues) == rule[k]);
-                            } else {
-                                r = (_.size(config[k]) == rule[k]);
-                            }
+                for (var k in rule) {
+                    var r = true;
+                    if (k == 'values') {
+                        if (rule[k] == -1) {
+                            r = config[k].length == 1 && config[k][0].cols.length <= 1;
+                        } else if (rule[k] > 0) {
+                            var l = 0;
+                            _.each(config[k], function (c) {
+                                l += c.cols.length;
+                            });
+                            r = l <= rule[k];
                         }
-                        if (!r) {
-                            $scope.chart_types_status[type] = r;
-                            break;
+                    } else {
+                        if (rule[k] == -1 && config[k] != undefined) {
+                            r = config[k].length == 0
+                        } else if (rule[k] > 0) {
+                            r = config[k].length <= rule[k];
                         }
+                    }
+                    if (!r) {
+                        $scope.chart_types_status[type] = r;
+                        break;
                     }
                 }
                 $scope.chart_types_status[type] = r;
@@ -614,7 +432,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             }
             var oldConfig = angular.copy($scope.curWidget.config);
             $scope.curWidget.config = {};
-            $scope.curWidget.config.option = {};
             $scope.curWidget.config.chart_type = chart_type;
             //loadDsExpressions();
             cleanPreview();
@@ -624,16 +441,11 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $scope.curWidget.config.groups = oldConfig.groups;
             $scope.curWidget.config.values = [];
 
-            addHelpMessage();
-
             $scope.curWidget.config.filters = oldConfig.filters;
             switch ($scope.curWidget.config.chart_type) {
                 case 'line':
-                    $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
-                        _.each(v.cols, function (c) {
-                            $scope.curWidget.config.values[0].cols.push(c);
-                        });
+                        $scope.curWidget.config.values.push({name: v.name, cols: v.cols});
                     });
                     $scope.curWidget.config.valueAxis = 'vertical';
                     _.each($scope.curWidget.config.values, function (v) {
@@ -674,84 +486,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                         }
                     }
                     break;
-                case 'gauge':
-                    $scope.curWidget.config.values.push({name: '', cols: []});
-                    _.each(oldConfig.values, function (v) {
-                        _.each(v.cols, function (c) {
-                            $scope.curWidget.config.values[0].cols.push(c);
-                        });
-                    });
-                    $scope.curWidget.config.selects = angular.copy($scope.columns);
-                    $scope.curWidget.config.styles = [
-                        {proportion: '0.2', color: '#228b22'},
-                        {proportion: '0.8', color: '#48b'},
-                        {proportion: '1', color: '#ff4500'}
-                    ];
-                    break;
-                case 'heatMapCalendar':
-                    $scope.curWidget.config.values.push({name: '', cols: []});
-                    _.each(oldConfig.values, function (v) {
-                        _.each(v.cols, function (c) {
-                            $scope.curWidget.config.values[0].cols.push(c);
-                        });
-                    });
-                    $scope.curWidget.config.selects = angular.copy($scope.columns);
-                    _.each($scope.curWidget.config.values, function (v) {
-                        v.dateFormat = 'yyyy-MM-dd';
-                        v.style = 'blue';
-                    });
-                    break;
-                case 'heatMapTable':
-                    $scope.curWidget.config.values.push({name: '', cols: []});
-                    _.each(oldConfig.values, function (v) {
-                        _.each(v.cols, function (c) {
-                            $scope.curWidget.config.values[0].cols.push(c);
-                        });
-                    });
-                    $scope.curWidget.config.selects = angular.copy($scope.columns);
-                    _.each($scope.curWidget.config.values, function (v) {
-                        v.style = 'blue';
-                    });
-                    break;
-                case 'liquidFill':
-                    $scope.curWidget.config.values.push({name: '', cols: []});
-                    _.each(oldConfig.values, function (v) {
-                        _.each(v.cols, function (c) {
-                            $scope.curWidget.config.values[0].cols.push(c);
-                        });
-                    });
-                    $scope.curWidget.config.selects = angular.copy($scope.columns);
-                    $scope.curWidget.config.animation = 'static';
-                    _.each($scope.curWidget.config.values, function (v) {
-                        v.style = 'circle';
-                    });
-                    break;
-                case 'chinaMap':
-                    $scope.curWidget.config.values.push({name: '', cols: []});
-                    _.each(oldConfig.values, function (v) {
-                        _.each(v.cols, function (c) {
-                            $scope.curWidget.config.values[0].cols.push(c);
-                        });
-                    });
-                    $scope.curWidget.config.valueAxis = 'vertical';
-                    _.each($scope.curWidget.config.values, function (v) {
-                        v.series_type = 'scatter';
-                        v.type = 'value';
-                    });
-                    break;
-                case 'chinaMapBmap':
-                    $scope.curWidget.config.values.push({name: '', cols: []});
-                    _.each(oldConfig.values, function (v) {
-                        _.each(v.cols, function (c) {
-                            $scope.curWidget.config.values[0].cols.push(c);
-                        });
-                    });
-                    $scope.curWidget.config.valueAxis = 'vertical';
-                    _.each($scope.curWidget.config.values, function (v) {
-                        v.series_type = 'scatter';
-                        v.type = 'value';
-                    });
-                    break;
                 default:
                     $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
@@ -771,14 +505,87 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
         $scope.newConfig = function () {
             $scope.curWidget.config = {};
-            $scope.curWidget.config.option = {};
             $scope.curWidget.config.chart_type = 'table';
             cleanPreview();
-            $scope.curWidget.config.selects = angular.copy($scope.columns);
-            $scope.curWidget.config.keys = [];
-            $scope.curWidget.config.groups = [];
-            $scope.curWidget.config.values = [{name: '', cols: []}];
-            $scope.curWidget.config.filters = [];
+            switch ($scope.curWidget.config.chart_type) {
+                case 'line':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.keys = new Array();
+                    $scope.curWidget.config.groups = new Array();
+                    $scope.curWidget.config.values = new Array();
+                    $scope.curWidget.config.filters = new Array();
+                    $scope.curWidget.config.valueAxis = 'vertical';
+                    $scope.add_value();
+                    break;
+                case 'pie':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.keys = new Array();
+                    $scope.curWidget.config.groups = new Array();
+                    $scope.curWidget.config.values = [{
+                        name: '',
+                        cols: []
+                    }];
+                    $scope.curWidget.config.filters = new Array();
+                    break;
+                case 'kpi':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.values = [{
+                        name: '',
+                        cols: [],
+                        style: 'bg-aqua'
+                    }];
+                    $scope.curWidget.config.filters = new Array();
+                    break;
+                case 'table':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.keys = new Array();
+                    $scope.curWidget.config.groups = new Array();
+                    $scope.curWidget.config.values = [{
+                        name: '',
+                        cols: []
+                    }];
+                    $scope.curWidget.config.filters = new Array();
+                    break;
+                case 'funnel':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.keys = new Array();
+                    $scope.curWidget.config.values = [{
+                        name: '',
+                        cols: []
+                    }];
+                    $scope.curWidget.config.filters = new Array();
+                    break;
+                case 'sankey':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.keys = new Array();
+                    $scope.curWidget.config.groups = new Array();
+                    $scope.curWidget.config.values = [{
+                        name: '',
+                        cols: []
+                    }];
+                    $scope.curWidget.config.filters = new Array();
+                    break;
+                case 'radar':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.keys = new Array();
+                    $scope.curWidget.config.groups = new Array();
+                    $scope.curWidget.config.values = [{
+                        name: '',
+                        cols: []
+                    }];
+                    $scope.curWidget.config.filters = new Array();
+                    break;
+                case 'map':
+                    $scope.curWidget.config.selects = angular.copy($scope.columns);
+                    $scope.curWidget.config.keys = new Array();
+                    $scope.curWidget.config.groups = new Array();
+                    $scope.curWidget.config.values = [{
+                        name: '',
+                        cols: []
+                    }];
+                    $scope.curWidget.config.filters = new Array();
+                    break;
+            }
             addWatch();
         };
 
@@ -789,10 +596,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.previewQuery = function () {
-            $('#viewQuery_widget').html("");
-            $timeout(function () {
-                angular.element('#viewQuery_widget_tab').trigger('click');
-            });
+            cleanPreview();
             $scope.loadingPre = true;
             dataService.viewQuery({
                 config: $scope.curWidget.config,
@@ -808,101 +612,73 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.preview = function () {
-            $('#preview_widget').html("");
-            $timeout(function () {
-                angular.element('#preview_widget_tab').trigger('click');
-            });
+
+            cleanPreview();
             $scope.loadingPre = true;
-            // --- start ---
-            // 添加echarts3.6.2后这里除了第一次可以加载echarts图表，再次加载无法显示图表。
-            // 完全无法找到问题下，出于无奈嵌套了一层后发现可以显示图表。囧！！
-            // 具体原因没有找到，求大神帮忙解决，thanks！
-            $('#preview_widget').html("<div id='preview' style='min-height: 450px; user-select: text;'></div>");
-            // --- end ---
-            var charType = $scope.curWidget.config.chart_type;
-            //百度地图特殊处理
-            if (charType == 'chinaMapBmap') {
-                chartService.render($('#preview'), {
-                    config: $scope.curWidget.config,
-                    datasource: $scope.datasource ? $scope.datasource.id : null,
-                    query: $scope.curWidget.query,
-                    datasetId: $scope.customDs ? undefined : $scope.curWidget.datasetId
-                });
+            $('#preview_widget').attr("w",$('#preview_widget').width());
+            chartService.render($('#preview_widget'), {
+                config: $scope.curWidget.config,
+                datasource: $scope.datasource ? $scope.datasource.id : null,
+                query: $scope.curWidget.query,
+                datasetId: $scope.customDs ? undefined : $scope.curWidget.datasetId
+            }, function (option) {
+                switch ($scope.curWidget.config.chart_type) {
+                    case 'line':
+                        $scope.previewDivWidth = 12;
+                        option.toolbox = {
+                            feature: {
+                                dataView: {
+                                    show: true,
+                                    readOnly: true
+                                }
+                            }
+                        };
+                        break;
+                    case 'pie':
+                        $scope.previewDivWidth = 12;
+                        option.toolbox = {
+                            feature: {
+                                dataView: {
+                                    show: true,
+                                    readOnly: true
+                                }
+                            }
+                        };
+                        break;
+                    case 'kpi':
+                        $scope.previewDivWidth = 6;
+                        break;
+                    case 'table':
+                        $scope.previewDivWidth = 12;
+                        break;
+                    case 'funnel':
+                        $scope.previewDivWidth = 12;
+                        option.toolbox = {
+                            feature: {
+                                dataView: {
+                                    show: true,
+                                    readOnly: true
+                                }
+                            }
+                        };
+                        break;
+                    case 'sankey':
+                        $scope.previewDivWidth = 12;
+                        option.toolbox = {
+                            feature: {
+                                dataView: {
+                                    show: true,
+                                    readOnly: true
+                                }
+                            }
+                        };
+                        break;
+                    case 'map':
+                        $scope.previewDivWidth = 12;
+                        break;
+                }
                 $scope.loadingPre = false;
-            } else {
-                chartService.render($('#preview'), {
-                    config: $scope.curWidget.config,
-                    datasource: $scope.datasource ? $scope.datasource.id : null,
-                    query: $scope.curWidget.query,
-                    datasetId: $scope.customDs ? undefined : $scope.curWidget.datasetId
-                }, function (option) {
-                    switch ($scope.curWidget.config.chart_type) {
-                        case 'line':
-                            $scope.previewDivWidth = 12;
-                            option.toolbox = {
-                                feature: {
-                                    dataView: {
-                                        show: true,
-                                        readOnly: true
-                                    }
-                                }
-                            };
-                            break;
-                        case 'pie':
-                            $scope.previewDivWidth = 12;
-                            option.toolbox = {
-                                feature: {
-                                    dataView: {
-                                        show: true,
-                                        readOnly: true
-                                    }
-                                }
-                            };
-                            break;
-                        case 'kpi':
-                            $scope.previewDivWidth = 6;
-                            break;
-                        case 'table':
-                            $scope.previewDivWidth = 12;
-                            break;
-                        case 'funnel':
-                            $scope.previewDivWidth = 12;
-                            option.toolbox = {
-                                feature: {
-                                    dataView: {
-                                        show: true,
-                                        readOnly: true
-                                    }
-                                }
-                            };
-                            break;
-                        case 'sankey':
-                            $scope.previewDivWidth = 12;
-                            option.toolbox = {
-                                feature: {
-                                    dataView: {
-                                        show: true,
-                                        readOnly: true
-                                    }
-                                }
-                            };
-                            break;
-                        case 'map':
-                            $scope.previewDivWidth = 12;
-                            break;
-                        case 'areaMap':
-                            $scope.previewDivWidth = 12;
-                            break;
-                        case 'chinaMap':
-                            $scope.previewDivWidth = 12;
-                            break;
-                        case 'relation':
-                            $scope.previewDivWidth = 12;
-                            break;
-                    }
-                    $scope.loadingPre = false;
-                }, null, !$scope.loadFromCache);
-            }
+            }, null, !$scope.loadFromCache);
         };
 
 // $scope.saveChart = function () {
@@ -918,33 +694,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
         };
 
-        $scope.add_china_map_value = function () {
-            $scope.curWidget.config.values.push({
-                name: '',
-                series_type: 'scatter',
-                type: 'value',
-                cols: []
-            });
-        };
-
-        $scope.add_style = function () {
-            $scope.curWidget.config.styles.push({
-                proportion: '',
-                color: ''
-            });
-        };
-
-        $scope.initColorPicker =  function (index) {
-            $timeout(function() {
-                $("#color_"+index).colorpicker()
-                    .on("changeColor", function(e){
-                        if($scope.curWidget.config.styles[e.target.id.split("_")[1]]){
-                            $scope.curWidget.config.styles[e.target.id.split("_")[1]].color = e.color.toHex();
-                        }
-                    });
-            }, 100,true);
-        };
-
         var saveWgtCallBack = function (serviceStatus) {
             if (serviceStatus.status == '1') {
                 getWidgetList();
@@ -956,7 +705,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.saveWgt = function () {
-            $scope.liteMode = false;
             if (!validation()) {
                 return;
             }
@@ -1028,21 +776,11 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $http.post("dashboard/checkWidget.do", {id: widget.id}).success(function (response) {
                 if (response.status == '1') {
                     doEditWgt(widget);
-                    if ($scope.customDs == true) $scope.doConfigParams();
                 } else {
                     var d = widget.data.datasetId ? 'CONFIG.WIDGET.DATASET' : 'CONFIG.WIDGET.DATA_SOURCE';
                     ModalUtils.alert(translate("ADMIN.CONTACT_ADMIN") + "：" + translate(d) + '/' + response.msg, "modal-danger", "lg");
                 }
             });
-        };
-
-        $scope.editCurWgt = function () {
-            var wgt = _.find($scope.widgetList, function (w) {
-                return w.id == $scope.widgetId;
-            });
-            if (wgt) {
-                $scope.editWgt(wgt);
-            }
         };
 
         var doEditWgt = function (widget) {
@@ -1077,16 +815,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
             addWatch();
         };
-
-        $scope.doCancel = function () {
-            if ($scope.optFlag == 'new') {
-                $scope.newConfig();
-                $scope.filterSelect = {};
-                cleanPreview();
-            } else {
-                $scope.editCurWgt();
-            }
-        }
 
         $scope.filterDimension = function (e) {
             if (e.type == 'level') {
@@ -1127,16 +855,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             return !result;
         };
 
-        $scope.refreshSchema = function () {
-            loadDataset(function () {
-                $scope.curWidget.expressions = [];
-                loadDsExpressions();
-                $scope.curWidget.filterGroups = [];
-                loadDsFilterGroups();
-                buildSchema();
-            });
-        }
-
         var buildSchema = function () {
             var loadFromDataset = false;
             if (!$scope.customDs) {
@@ -1150,7 +868,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             if (loadFromDataset) {
                 $scope.schema = $scope.dataset.data.schema;
                 $scope.alerts = [];
-                $scope.switchLiteMode(true);
             } else {
                 $scope.loading = true;
                 dataService.getColumns({
@@ -1166,7 +883,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                             _.each(dps.columns, function (e) {
                                 $scope.schema.selects.push({column: e});
                             });
-                            $scope.switchLiteMode(true);
                         } else {
                             $scope.alerts = [{msg: dps.msg, type: 'danger'}];
                         }
@@ -1214,17 +930,12 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             }
         };
 
-        $scope.getOptionsView = function () {
-            var basePath = 'org/cboard/view/config/chart/options/';
-            if ($scope.curWidget.config && $scope.curWidget.config.chart_type) {
-                return basePath + $scope.curWidget.config.chart_type + '.html';
-            }
-        }
-
         $scope.deleteValue = function (cols) {
             _.each(cols, function (e) {
                 if (e.type == 'exp') {
                     $scope.expressions.push(e);
+                } else {
+                    $scope.curWidget.config.selects.push(e.col);
                 }
             });
         };
@@ -1236,7 +947,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 } else if (type == 'select' || type == 'measure') {
                     list[index] = {col: item.column, aggregate_type: 'sum'};
                 }
-                $scope.onDragCancle();
             },
             toSelect: function (list, index, item, type) {
                 if (type == 'col') {
@@ -1362,7 +1072,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.editFilterGroup = function (col) {
-            var columnObjs = schemaToSelect($scope.schema);
+            var selects = schemaToSelect($scope.schema);
             $uibModal.open({
                 templateUrl: 'org/cboard/view/config/modal/filterGroup.html',
                 windowTemplateUrl: 'org/cboard/view/util/modal/window.html',
@@ -1374,7 +1084,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                     } else {
                         $scope.data = {group: '', filters: []};
                     }
-                    $scope.columnObjs = columnObjs;
+                    $scope.selects = selects;
                     $scope.close = function () {
                         $uibModalInstance.close();
                     };
@@ -1446,20 +1156,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
         };
 
-        $scope.editAlign = function (o) {
-            switch (o.align) {
-                case undefined:
-                    o.align = 'left';
-                    break;
-                case 'left':
-                    o.align = 'right';
-                    break;
-                default:
-                    o.align = undefined;
-                    break;
-            }
-        };
-
         $scope.cleanRowSort = function (o) {
             var sort = o.sort;
             _.each($scope.curWidget.config.keys, function (k) {
@@ -1467,6 +1163,23 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
             $scope.cleanVSort();
             o.sort = sort;
+        };
+
+        $scope.showTooltip = function (chart, e) {
+            if (chart.isDisabled) {
+                return;
+            }
+            var $curTarget = $(e.currentTarget),
+                _tooltip = $curTarget.find(".chart-tip");
+            _tooltip.show();
+        };
+        $scope.hideTooltip = function (chart, e) {
+            if (chart.isDisabled) {
+                return;
+            }
+            var $curTarget = $(e.currentTarget),
+                _tooltip = $curTarget.find(".chart-tip");
+            _tooltip.hide();
         };
 
         /** js tree related start... **/
@@ -1499,11 +1212,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         $scope.applyModelChanges = function () {
             return !$scope.ignoreChanges;
         };
-        $scope.showInfo = function () {
-            if (!checkTreeNode("info")) return;
-            var content = getSelectedWidget();
-            ModalUtils.info(content,"modal-info", "lg");
-        };
+
         $scope.copyNode = function () {
             if (!checkTreeNode("copy")) return;
             $scope.copyWgt(getSelectedWidget());
@@ -1511,8 +1220,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
         $scope.editNode = function () {
             if (!checkTreeNode("edit")) return;
-            var selectedNode = jstree_GetSelectedNodes(treeID)[0];
-            $state.go('config.widget', {id: selectedNode.id}, {notify: false, inherit: false});
             $scope.editWgt(getSelectedWidget());
         };
 
@@ -1575,7 +1282,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
             jstree_ReloadTree(treeID, originalData);
         };
-
         $scope.treeEventsObj = function () {
             var baseEventObj = jstree_baseTreeEventsObj({
                 ngScope: $scope, ngHttp: $http, ngTimeout: $timeout,
@@ -1583,74 +1289,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             });
             return baseEventObj;
         }();
-
-        $scope.doConfigParams = function () {
-            $http.get('dashboard/getConfigParams.do?type=' + $scope.datasource.type + '&page=widget.html').then(function (response) {
-                $scope.params = response.data;
-            });
-        };
-
-        $scope.changeDs = function () {
-            $scope.curWidget.query = {};
-            $http.get('dashboard/getConfigParams.do?type=' + $scope.datasource.type + '&page=widget.html').then(function (response) {
-                $scope.params = response.data;
-                for (var i in $scope.params) {
-                    var name = $scope.params[i].name;
-                    var value = $scope.params[i].value;
-                    var checked = $scope.params[i].checked;
-                    var type = $scope.params[i].type;
-                    if (type == "checkbox" && checked == true) {
-                        $scope.curWidget.query[name] = true;
-                    }
-                    if (type == "number" && value != "" && !isNaN(value)) {
-                        $scope.curWidget.query[name] = Number(value);
-                    } else if (value != "") {
-                        $scope.curWidget.query[name] = value;
-                    }
-                }
-            });
-        };
-
-        $scope.setCities = function () {
-            $scope.cities = [];
-            var province = _.find($scope.provinces, function (e) {
-                return e.code == $scope.curWidget.config.province.code;
-            });
-            if (province && province.cities) {
-                $scope.cities = province.cities;
-            } else if ($scope.curWidget.config.city && $scope.curWidget.config.city.code) {
-                $scope.curWidget.config.city.code = "";
-            }
-        }
         /** js tree related End... **/
 
-        $scope.targetHighlight = {
-            row: false, column: false, value: false, filter: false
-        };
-
-        $scope.onDragstart = function (type) {
-            switch (type) {
-                case 'dimension':
-                    $scope.targetHighlight = {row: true, column: true, value: false, filter: true};
-                    break;
-                case 'measure':
-                case 'exp':
-                    $scope.targetHighlight = {row: false, column: false, value: true, filter: false};
-                    break;
-                case 'filterGroup':
-                    $scope.targetHighlight.filter = true;
-                    break;
-                case 'select':
-                    $scope.targetHighlight = {row: true, column: true, value: true, filter: true};
-                    break;
-            }
-        };
-
-        $scope.onDragCancle = function () {
-            $timeout($scope.targetHighlight = {
-                row: false, column: false, value: false, filter: false
-            }, 500);
-        };
 
         /** Ace Editor Starer... **/
         $scope.queryAceOpt = datasetEditorOptions();

@@ -3,6 +3,12 @@ package org.cboard.services;
 import org.cboard.dto.DashboardMenu;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpSession;
+import javax.sql.RowSet;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +23,7 @@ public class MenuService {
     static {
         menuList.add(new DashboardMenu(1, -1, "SIDEBAR.CONFIG", "config"));
         menuList.add(new DashboardMenu(2, 1, "SIDEBAR.DATA_SOURCE", "config.datasource"));
-        menuList.add(new DashboardMenu(3, 1, "SIDEBAR.DATASET", "config.dataset"));
+        menuList.add(new DashboardMenu(3, 1, "SIDEBAR.CUBE", "config.dataset"));
         menuList.add(new DashboardMenu(4, 1, "SIDEBAR.WIDGET", "config.widget"));
         menuList.add(new DashboardMenu(5, 1, "SIDEBAR.DASHBOARD", "config.board"));
         menuList.add(new DashboardMenu(6, 1, "SIDEBAR.DASHBOARD_CATEGORY", "config.category"));
@@ -31,7 +37,10 @@ public class MenuService {
         menuList.add(new DashboardMenu(13, 1, "SIDEBAR.FUNNEL_ANALYSIS", "config.customFunnel"));
 
         menuList.add(new DashboardMenu(14, 1, "SIDEBAR.PATH_ANALYSIS", "config.path_analysis"));
+        menuList.add(new DashboardMenu(15, 1, "SIDEBAR.MENU_SORT", "config.menuSort"));
         //menuList.add(new DashboardMenu(13, 1, "SIDEBAR.CREATE_FUNNEL", "config.customFunnel"));
+
+
     }
 
     public List<DashboardMenu> getMenuList() {

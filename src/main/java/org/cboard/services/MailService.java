@@ -5,13 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.cboard.pojo.DashboardJob;
 import org.cboard.services.persist.PersistContext;
 import org.cboard.services.persist.excel.XlsProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,8 +26,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class MailService {
-
-    private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private XlsProcessService xlsProcessService;
@@ -56,13 +51,16 @@ public class MailService {
     @Value("${mail.smtp.ssl.checkserveridentity:false}")
     private Boolean mail_smtp_ssl_check;
 
+    //jdk1.8遍历List的方法
     private Function<Object, PersistContext> getPersistBoard(List<PersistContext> persistContextList) {
         return e -> persistContextList.stream()
-                .filter(board -> {
-                    Long boardId = board.getDashboardId();
-                    return boardId != null && boardId.equals((((JSONObject) e).getLong("id")));
-                })
-                .findFirst().get();
+//                .filter(board -> board.getDashboardId() == ((JSONObject) e).getLong("id"))
+                .filter(board ->
+                        board.getDashboardId().equals(
+                                ((JSONObject) e).getLong("id")
+                        )
+                )
+                .findFirst().get();//获取第一条数据（即dashboardId = ((JSONObject) e).getLong("id")）
     }
 
     public String sendDashboard(DashboardJob job) throws Exception {
@@ -71,7 +69,7 @@ public class MailService {
         List<PersistContext> persistContextList = config.getJSONArray("boards").stream()
                 .map(e -> persistService.persist(((JSONObject) e).getLong("id"), job.getUserId()))
                 .collect(Collectors.toList());
-
+        //通过这种方式可以遍历json
         List<PersistContext> workbookList = config.getJSONArray("boards").stream()
                 .filter(e -> ((JSONObject) e).getString("type").contains("xls"))
                 .map(getPersistBoard(persistContextList))
@@ -80,16 +78,12 @@ public class MailService {
         ByteArrayOutputStream baos = null;
         if (workbookList != null && workbookList.size() > 0) {
             HSSFWorkbook workbook = xlsProcessService.dashboardToXls(workbookList);
-            if (StringUtils.isNotEmpty(config.getString("xlspwd"))) {
-                Biff8EncryptionKey.setCurrentUserPassword(config.getString("xlspwd"));
-            }
             baos = new ByteArrayOutputStream();
             try {
                 workbook.write(baos);
             } catch (IOException e) {
-                LOG.error("", e);
+                e.printStackTrace();
             }
-
         }
 
 
@@ -108,7 +102,7 @@ public class MailService {
                 String cid = email.embed(ds, e.getDashboardId() + ".jpg");
                 sb.append("<img src='cid:").append(cid).append("'></img></br>");
             } catch (EmailException e1) {
-                LOG.error("", e);
+                e1.printStackTrace();
             }
         });
         email.setHtmlMsg(sb.append("</html>").toString());

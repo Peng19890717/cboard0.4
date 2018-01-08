@@ -6,7 +6,6 @@ import org.cboard.pojo.DashboardDataset;
 import org.cboard.services.role.RolePermission;
 
 import javax.annotation.Nullable;
-import java.sql.Timestamp;
 import java.util.Map;
 
 /**
@@ -17,10 +16,6 @@ public class ViewDashboardDataset {
     private String userId;
     private String name;
     private String categoryName;
-    private String userName;
-    private String loginName;
-    private String createTime;
-    private String updateTime;
     private Map<String, Object> data;
     private boolean edit;
     private boolean delete;
@@ -38,11 +33,7 @@ public class ViewDashboardDataset {
         this.id = dataset.getId();
         this.userId = dataset.getUserId();
         this.name = dataset.getName();
-        this.userName = dataset.getUserName();
         this.categoryName = dataset.getCategoryName();
-        this.loginName = dataset.getLoginName();
-        this.createTime = dataset.getCreateTime().toString();
-        this.updateTime = dataset.getUpdateTime().toString();
         this.data = JSONObject.parseObject(dataset.getData());
         this.edit = RolePermission.isEdit(dataset.getPermission());
         this.delete = RolePermission.isDelete(dataset.getPermission());
@@ -102,37 +93,5 @@ public class ViewDashboardDataset {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getLoginName() {
-        return loginName;
-    }
-
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
-
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }

@@ -32,6 +32,12 @@ public class DataProviderRoleService {
     @Value("${admin_user_id}")
     private String adminUserId;
 
+    /**
+     * 执行Around方法之前需要执行这里的query来进行权限的校验
+     * @param proceedingJoinPoint
+     * @return
+     * @throws Throwable
+     */
     @Around("execution(* org.cboard.services.DataProviderService.getDimensionValues(..)) ||" +
             "execution(* org.cboard.services.DataProviderService.getColumns(..)) ||" +
             "execution(* org.cboard.services.DataProviderService.queryAggData(..)) ||" +
@@ -41,12 +47,12 @@ public class DataProviderRoleService {
         Long datasetId = (Long) proceedingJoinPoint.getArgs()[2];
         String userid = authenticationService.getCurrentUser().getUserId();
         if (datasetId != null) {
-            if (datasetDao.checkDatasetRole(userid, datasetId, RolePermission.PATTERN_READ) > 0) {
-                return proceedingJoinPoint.proceed();
+            if (datasetDao.checkDatasetRole(userid, datasetId, RolePermission.PATTERN_READ) > 0) {//校验数据数据集权限
+                return proceedingJoinPoint.proceed();//执行下面的方法，即Around里面的其中一个方法
             }
         } else {
-            if (datasourceDao.checkDatasourceRole(userid, datasourceId, RolePermission.PATTERN_READ) > 0) {
-                return proceedingJoinPoint.proceed();
+            if (datasourceDao.checkDatasourceRole(userid, datasourceId, RolePermission.PATTERN_READ) > 0) {//校验数据源权限
+                return proceedingJoinPoint.proceed();//执行下面的方法，即Around里面的其中一个方法
             }
         }
         return null;

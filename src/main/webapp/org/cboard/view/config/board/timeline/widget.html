@@ -17,10 +17,10 @@
                             ng-click="addWidget(row)">
                         {{'CONFIG.DASHBOARD.ADD_COLUMN'|translate}}
                     </button>
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse" title="{{'COMMON.COLLAPSE'|translate}}"><i
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                             class="fa fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove" title="{{'COMMON.REMOVE'|translate}}"
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"
                             ng-click="curBoard.layout.rows.splice($index, 1)"><i
                             class="fa fa-times"></i>
                     </button>
@@ -36,7 +36,7 @@
                      style="height: 40px;display: inline-block;vertical-align: middle;"></div>
             </div>
             <div class="col-md-{{widget.width}}" ng-repeat="widget in row.widgets">
-                <div class="box box-primary"
+                <div class="box box-primary collapsed-box"
                      style="border-left: 1px solid #d2d6de; border-right: 1px solid #d2d6de">
                     <div class="box-header" dnd-draggable="widget" dnd-type="'w'"
                          nd-effect-allowed="move"
@@ -45,12 +45,12 @@
                         {{widget.name}}
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool"
-                                    data-widget="collapse" title="{{'COMMON.COLLAPSE'|translate}}"><i
+                                    data-widget="collapse"><i
                                     class="fa fa-wrench"></i>
                             </button>
                             <button type="button" class="btn btn-box-tool"
                                     data-widget="remove"
-                                    ng-click="row.widgets.splice($index, 1)" title="{{'COMMON.REMOVE'|translate}}"><i
+                                    ng-click="row.widgets.splice($index, 1)"><i
                                     class="fa fa-times"></i>
                             </button>
                         </div>

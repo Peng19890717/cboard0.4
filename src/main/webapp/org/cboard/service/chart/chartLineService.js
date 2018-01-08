@@ -2,14 +2,11 @@
  * Created by yfyuan on 2016/10/28.
  */
 'use strict';
-cBoard.service('chartLineService', function ($state, $window) {
+cBoard.service('chartLineService', function () {
 
-    this.render = function (containerDom, option, scope, persist, drill, relations, chartConfig) {
-        var render = new CBoardEChartRender(containerDom, option);
-        render.addClick(chartConfig, relations, $state, $window);
-        return render.chart(null, persist);
+    this.render = function (containerDom, option, scope, persist) {
+        return new CBoardEChartRender(containerDom, option).chart(null, persist);
     };
-
     this.parseOption = function (data) {
 
         var chartConfig = data.chartConfig;
@@ -21,15 +18,12 @@ cBoard.service('chartLineService', function ($state, $window) {
         var string_keys = _.map(casted_keys, function (key) {
             return key.join('-');
         });
-        var tunningOpt = chartConfig.option;
 
         var sum_data = [];
         for (var j = 0; aggregate_data[0] && j < aggregate_data[0].length; j++) {
             var sum = 0;
             for (var i = 0; i < aggregate_data.length; i++) {
                 sum += aggregate_data[i][j] ? Number(aggregate_data[i][j]) : 0;
-                // change undefined to 0
-                aggregate_data[i][j] = aggregate_data[i][j] ? Number(aggregate_data[i][j]) : 0;
             }
             sum_data[j] = sum;
         }
@@ -39,7 +33,7 @@ cBoard.service('chartLineService', function ($state, $window) {
             var s = angular.copy(newValuesConfig[joined_values]);
             s.name = joined_values;
             s.data = aggregate_data[i];
-            s.barMaxWidth = 40;
+            s.barMaxWidth = 20;
             if (s.type == 'stackbar') {
                 s.type = 'bar';
                 s.stack = s.valueAxisIndex.toString();
@@ -59,42 +53,32 @@ cBoard.service('chartLineService', function ($state, $window) {
         }
 
         var valueAxis = angular.copy(chartConfig.values);
+        valueAxis.forEach(function (item) {
+            item.min=0;
+        });
         _.each(valueAxis, function (axis, index) {
             axis.axisLabel = {
                 formatter: function (value) {
                     return numbro(value).format("0a.[0000]");
                 }
             };
+           // console.log("axis.series_type"+axis.series_type)
             if (axis.series_type == "percentbar") {
+              //  console.log("axis.series_type"+axis.series_type)
                 axis.min = 0;
                 axis.max = 100;
-            } else {
-                axis.min = axis.min ? axis.min : null;
-                axis.max = axis.max ? axis.max : null;
             }
             if (index > 0) {
                 axis.splitLine = false;
             }
             axis.scale = true;
         });
-
-        if (tunningOpt) {
-            var labelInterval, labelRotate;
-            tunningOpt.ctgLabelInterval ? labelInterval = tunningOpt.ctgLabelInterval : 'auto';
-            tunningOpt.ctgLabelRotate ? labelRotate = tunningOpt.ctgLabelRotate : 0;
-        }
-
         var categoryAxis = {
             type: 'category',
-            data: string_keys,
-            axisLabel: {
-                interval: labelInterval,
-                rotate: labelRotate
-            }
+            data: string_keys
         };
 
         var echartOption = {
-            grid: angular.copy(echartsBasicOption.grid),
             legend: {
                 data: _.map(casted_values, function (v) {
                     return v.join('-');
@@ -120,18 +104,35 @@ cBoard.service('chartLineService', function ($state, $window) {
             series: series_data
         };
 
+        var basicOption = {
+            title: {},
+            grid: {
+                left: '50',
+                right: '20',
+                bottom: '15%',
+                top: '20%',
+                containLabel: false
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                x: 'left',
+                itemWidth: 15,
+                itemHeight: 10
+            }
+        };
+
         if (chartConfig.valueAxis === 'horizontal') {
-            echartOption.grid.left = 'left';
-            echartOption.grid.containLabel = true;
-            echartOption.grid.bottom = '5%';
+            basicOption.grid.left = 'left';
+            basicOption.grid.containLabel = true;
+            basicOption.grid.bottom = '5%';
         }
         if (chartConfig.valueAxis === 'vertical' && chartConfig.values.length > 1) {
-            echartOption.grid.right = 40;
+            basicOption.grid.right = 40;
         }
-
-        // Apply tunning options
-        updateEchartOptions(tunningOpt, echartOption);
-
-        return echartOption;
+     //   debugger;
+       // echartOption.xAxis[0].min=1;
+        return $.extend(true, {}, echartOption, basicOption);
     };
 });

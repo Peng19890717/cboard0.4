@@ -16,27 +16,20 @@
         <jackson.version>1.9.10</jackson.version>
         <jdk.version>1.8</jdk.version>
         <presto.version>0.161</presto.version>
-        <h2.version>1.4.196</h2.version>
     </properties>
-
     <repositories>
+
         <repository>
-            <id>aliyun</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <id>mavens</id>
+            <url>http://central.maven.org/maven2/</url>
         </repository>
     </repositories>
-
     <dependencies>
         <!--统一配置管理服务SuperDiamond-->
         <dependency>
             <groupId>com.github.diamond</groupId>
             <artifactId>super-diamond-client</artifactId>
             <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -46,11 +39,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
@@ -138,17 +126,17 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.8.1</version>
+            <version>2.7.4</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.8.1</version>
+            <version>2.7.4</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.8.1</version>
+            <version>2.7.4</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -191,11 +179,7 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.29</version>
         </dependency>
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
-        </dependency>
+    
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
@@ -210,11 +194,6 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.3-1104-jdbc41</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>5.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
@@ -296,12 +275,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.16</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.16</version>
+            <version>3.15</version>
         </dependency>
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
@@ -338,35 +312,11 @@
             <artifactId>hessian</artifactId>
             <version>4.0.38</version>
         </dependency>
-        <dependency>
-            <groupId>com.microsoft.ews-java-api</groupId>
-            <artifactId>ews-java-api</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/au.com.bytecode/opencsv -->
-        <dependency>
-            <groupId>au.com.bytecode</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path -->
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.4.0</version>
-        </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>cboard</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -380,61 +330,6 @@
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <warName>${project.artifactId}</warName>
-                    <webResources>
-                        <resource>
-                            <directory>lib/</directory>
-                            <targetPath>WEB-INF/lib</targetPath>
-                            <includes>
-                                <include>**/*.jar</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>env</id>
-            <activation>
-                <property>
-                    <name>env</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>2.6</version>
-                        <executions>
-                            <execution>
-                                <id>copy-resources</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/main/resources/${env}</directory>
-                                            <filtering>false</filtering>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

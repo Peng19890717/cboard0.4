@@ -32,11 +32,18 @@ cBoard.directive('dashboardWidget', function ($compile, $templateCache, dataServ
 
     var renderTable = function (scope, element, attrs) {
         var template = $templateCache.get("chartContent");
-        scope.myheight = scope.row.height ? (scope.row.height - 44) : 500;
+       // scope.myheight = scope.row.height ? (scope.row.height - 44) : 500;
+        //scope.myWidth=800;
         var aa = $compile(template)(scope);
         element.append(aa);
         var ndWrapper = $(element).find('.box-body');
+        ndWrapper.attr("w",$(ndWrapper).width());
+         debugger;
         scope.widget.render(ndWrapper, null, scope);
+        // $(window).resize(function() {
+        //     ndWrapper.attr("w",$(ndWrapper).width());
+        //     scope.widget.render(ndWrapper, null, scope);
+        // });
     };
 
     return {
@@ -48,8 +55,11 @@ cBoard.directive('dashboardWidget', function ($compile, $templateCache, dataServ
                 },
                 post: function (scope, element, attrs) {
                     switch (scope.widget.widget.data.config.chart_type) {
-                        case 'map':
-                            renderMap(scope, element, attrs);
+                        case 'line':
+                            renderEchart(scope, element, attrs);
+                            break;
+                        case 'pie':
+                            renderEchart(scope, element, attrs);
                             break;
                         case 'kpi':
                             renderKpi(scope, element, attrs);
@@ -57,8 +67,21 @@ cBoard.directive('dashboardWidget', function ($compile, $templateCache, dataServ
                         case 'table':
                             renderTable(scope, element, attrs);
                             break;
-                        default:
+                        case 'funnel':
                             renderEchart(scope, element, attrs);
+                            break;
+                        case 'sankey':
+                            renderEchart(scope, element, attrs);
+                            break;
+                        case 'radar':
+                            renderEchart(scope, element, attrs);
+                            break;
+                        case 'map':
+                            renderMap(scope, element, attrs);
+                            break;
+                        case 'scatter':
+                            renderEchart(scope, element, attrs);
+                            break;
                     }
                 }
             }

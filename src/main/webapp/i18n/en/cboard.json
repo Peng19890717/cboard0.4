@@ -7,7 +7,6 @@
     "LOADING": "Loading...",
     "REFRESH": "Refresh",
     "EDIT": "Edit",
-    "EDIT_DEFAULT_VALUE": "Edit Default Value",
     "CONFIRM_DELETE": "Confirm to Delete?",
     "CONFIRM_SAVE_BEFORE_PREVIEW": "Need save board before preview, confirm to save?",
     "NOT_ALLOWED_TO_DELETE_BECAUSE_BE_DEPENDENT": "Not allowed to delete, because be dependent",
@@ -27,46 +26,21 @@
     "LAST10D_TIMESTAMP": "Last 10 Days(Timestamp)",
     "LAST3H_TIMESTAMP": "Last 3 Hours(Timestamp)",
     "LAST60MIN_TIMESTAMP": "Last 60 Hours(Timestamp)",
-    "LOGIN_NAME": "Current Login Name",
-    "USER_NAME": "Current User Name",
-    "USER_ROLES": "Current User Name",
     "FILTER_GROUP": "Filter Group",
     "SAVE_AS": "Save As",
     "PARAM": "Parameter",
     "DRILL_DOWN": "Drill Down",
-    "ROLL_UP": "Roll Up",
-    "WANRING": "WANRING!",
-    "COLLAPSE": "Collapse",
-    "REMOVE": "Remove",
-    "ADD_RELATIONS": "Add Relations",
-    "DEL_RELATIONS": "Del Relations",
-    "DATE": "Date",
-    "VALUE": "Value",
-    "INFORMATION": "Information",
-    "USER_ID": "creator ID",
-    "CREATOR_NAME": "creator login name",
-    "CREATE_TIME": "create time",
-    "UPDATE_TIM": "last update time",
-    "FOLD_TREE": "Fold all nodes",
-    "UNFOLD_TREE": "Unflod all nodes"
-  },
-  "HOMEPAGE": {
-    "TITLE": "HOMEPAGE",
-    "LINK_CAPTION": "Home",
-    "QUICK_START": "Quick Start",
-    "CUBES": "Cubes",
-    "CUBES_TIP": "Double click a cube, start chart design!"
+    "ROLL_UP": "Roll Up"
   },
   "TIPS": {
     "CAL_EXPR": "Calculate after aggregation. Use assist click input to avoid typo. e.g: Math.log(sum(columnA)/count(columB))"
   },
   "SIDEBAR": {
-    "MENU": "MENU",
     "C_DASHBOARD": "Dashboard",
     "MY_DASHBOARD": "My DashBoard",
     "CONFIG": "Configuration",
     "DATA_SOURCE": "DataSource",
-    "DATASET": "Dataset",
+    "CUBE": "Cube",
     "WIDGET": "Widget",
     "DASHBOARD": "Dashboard",
     "DASHBOARD_CATEGORY": "Dashboard Category",
@@ -74,19 +48,15 @@
     "USER_ADMIN": "User Admin",
     "RES_ADMIN": "Resource Admin",
     "JOB": "Job",
-    "SHARE_RESOURCE": "Share Resource"
+    "SHARE_RESOURCE": "Share Resource",
+    "EVENT_ANALYSIS":"event analysis",
+    "CREATE_FUNNEL":"creat funnel",
+    "FUNNEL_ANALYSIS":"funnel analysis",
+    "PATH_ANALYSIS":"path analysis"　,
+    "MENU_SORT":"menu sort"
   },
   "HEADER": {
-    "SIGN_OUT": "SignOut",
-    "TOGGLE_NAVIGATION": "Toggle navigation",
-    "CHANGE_PASSWORD": "Change Password",
-    "CURRENT_PASSWORD": "Current Password",
-    "NEW_PASSWORD": "New Password",
-    "CONFIRM_PASSWORD": "Confirm Password"
-  },
-  "FOOTER": {
-    "COPYRIGHT": "Ctrip Payment Department",
-    "VERSION": "Version"
+    "SIGN_OUT": "SignOut"
   },
   "DASHBOARD": {
     "PARAM": {
@@ -130,8 +100,6 @@
       "ROW": "Row",
       "GROUP": "Column",
       "VALUE": "Value",
-      "MIN_VALUE": "Min Value",
-      "MAX_VALUE": "Max Value",
       "VALUE_AXIS": "Value Axis",
       "FILTER": "Filter",
       "LABEL": "Label",
@@ -176,51 +144,13 @@
       "TIPS_MEASURE": "Value",
       "TIPS_DIM_NUM_0": "0",
       "TIPS_DIM_NUM_1": "1",
-      "TIPS_DIM_NUM_2": "2",
-      "TIPS_DIM_NUM_1_2": "1 or 2",
       "TIPS_DIM_NUM_0_MORE": "0 or more",
       "TIPS_DIM_NUM_1_MORE": "1 or more",
       "FROM_CACHE": "From Cache",
       "SIZE": "Size",
       "COLOR": "Opacity",
       "PREVIEW_QUERY": "View Query",
-      "PERCENT_BAR": "Stacked Percent",
-      "AGGREGATE_TYPE": "Aggregate Type",
-      "GAUGE": "Gauge",
-      "ADD_NEW_STYLE": "Add New Style",
-      "LINE_STYLE": "Line Style",
-      "STYLE_PROPORTION": "Proportion",
-      "NODE_PROPORTION": "Node Proportion",
-      "STYLE_COLOR": "Color",
-      "WORD_CLOUD": "Word Cloud",
-      "TREE_MAP": "Tree Map",
-      "LEAF_DEPTH": "Leaf Depth",
-      "MULTI": "Multi",
-      "RANDOM": "Random",
-      "BLUE": "Blue",
-      "PURPLE": "Purple",
-      "AREA_MAP": "Area Map",
-      "HEAT_MAP_CALENDER": "Heat Map (Calender)",
-      "DATE_FORMAT": "Date Format",
-      "HEAT_MAP_TABLE": "Heat Map (Table)",
-      "LIQUID_FILL": "Liquid Fill",
-      "STATIC": "Static",
-      "DYNAMIC": "Dynamic",
-      "CIRCLE": "Circle",
-      "PIN": "Pin",
-      "RECT": "Rect",
-      "ARROW": "Arrow",
-      "TRIANGLE": "Triangle",
-      "ROUND_RECT": "RoundRect",
-      "SQUARE": "Square",
-      "DIAMOND": "Diamond",
-      "CONTRAST": "Contrast",
-      "MARK_LINE_MAP": "Mark Line Map",
-      "HEAT_MAP": "Heat Map",
-      "SCATTER_MAP":"Scatter Map",
-      "CHINA_MAP":"China Map (Local)",
-      "CHINA_MAP_BMAP":"China Map (Bmap)",
-      "RELATION": "Relation"
+      "PERCENT_BAR": "Stacked Percent"
     },
     "DASHBOARD": {
       "CATEGORY": "Category",
@@ -242,11 +172,6 @@
       "CUBE_TREE": "Cube/Query in dashboard",
       "LINKED_COLUMN": "Columns linked with this param",
       "PARAM_TYPE": "Param Type",
-      "PARAM_TYPE_SELECTOR": "Selector",
-      "PARAM_TYPE_SLIDER": "Slider",
-      "CHART_NAME":"Chart Name",
-      "ENTER_PARAMETER_NAME": "Please enter the parameter name",
-      "DASHBOARD_SOMETHING_WRONG": "Some widget access errors, please check the config of the dashboard!",
       "VALUE_FORMMAT": "Value Format",
       "VIEW_FORMMAT": "View Format",
       "MIN": "Min",
@@ -267,19 +192,7 @@
       "ADD_MAIN_NODE": "Add Main Node",
       "ADD_SUB_NODE": "Add Sub Node",
       "NODE_NAME": "Node Name",
-      "TITLE": "Title",
-      "NEW_GRID_LAYOUT": "New grid layout",
-      "NEW_TIMELINE_LAYOUT": "New timeline layout",
-      "VALUE_FORMMAT_ALERT": "Only date type need format",
-      "AUTOMATIC_REFRESH_SWITCH": "Automatic refresh switch",
-      "REMOVE_EMPTY_LINES": "Remove empty lines",
-      "DATA_REFRESH_TIME":"Data refresh time",
-      "WIDGET_TARGET":"Correlation Widget",
-      "WIDGET_FIELDS":"Widget Fields",
-      "WIDGET_TARGET_FIELDS":"Correlation Widget Fields",
-      "BOARD_TARGET":"Correlation Board",
-      "BOARD_TARGET_PARAMS":"Correlation Board Params",
-      "RELATION":"Relation"
+      "TITLE": "Title"
     },
     "CATEGORY": {
       "NAME": "Category Name",
@@ -302,8 +215,7 @@
       "TIP_EDIT_ALIAS": "Alias",
       "TIP_ADD_HIERARCHY": "Add Hierarchy",
       "TIP_SWITCH_TO_MEASURE": "Switch to Measure",
-      "TIP_SWITCH_TO_DIMENSION": "Switch to Dimension",
-      "CUSTOM": "Custom"
+      "TIP_SWITCH_TO_DIMENSION": "Switch to Dimension"
     },
     "JOB": {
       "CONFIG": "Config",
@@ -335,8 +247,7 @@
       "FAIL": "Fail",
       "FINISH": "Finish",
       "PROCESSING": "Processing",
-      "STATUS": "Status",
-      "XLSPWD": "Password for Xls"
+      "STATUS": "Status"
     },
     "SHARE_RES": {
       "YOUR_RES": "Your Resources",
@@ -363,24 +274,16 @@
     "JOB": "Job",
     "CONTACT_ADMIN": "Please contact the administrator to apply the following resources' access",
     "BY_NAME": "By Name",
-    "BY_ROLE": "By Role",
-    "REVOKE": "Revoke",
-    "GRANT": "Grant",
-    "DELETE_USER_IN_ROLE": "Revoke User's Role(s)",
-    "ADD_USER2ROLE": "Grant User Role(s)",
-    "ADD_RES2ROLE": "Upate Resource of Role",
-    "TOGGLE_UPDATE": "Toggle UDATE",
-    "TOGGLE_DELETE": "Toggle DELETE"
+    "BY_ROLE": "By Role"
   },
   "DATAPROVIDER": {
     "AGGREGATABLE_PROVIDER": "Aggregatable DataProvider",
-    "AGGREGATABLE_PROVIDER_SOLR": "Aggregatable DataProvider(Must Solr5.0+)",
-    "POOLEDCONNECTION": "Pooled Connection",
     "JDBC": {
       "DRIVER": "Driver (eg: com.mysql.jdbc.Driver)",
       "JDBCURL": "JDBC Url (eg: jdbc:mysql://hostname:port/db)",
       "USERNAME": "UserName",
       "PASSWORD": "Password",
+      "POOLEDCONNECTION": "Pooled Connection",
       "SQLTEXT": "Sql Text"
     },
     "SAIKU": {
@@ -388,39 +291,9 @@
     "TEXTFILE": {
       "BASE_PATH": "BasePath",
       "FILE_NAME": "FileName",
-      "ENCODING": "Encoding",
-      "SEPRATOR": "Seprator",
-      "DATA_TYPE": "DataType",
-      "FIELD_NAMES": "FieldNames",
-      "QUOTE_CHAR": "quoteChar",
-      "ESCAPE_CHAR": "escapeChar"
-    },
-    "SOLR":{
-      "SOLR_SERVERS": "Solr Servers",
-      "COLLECTION": "Collection",
-      "Q": "q",
-      "FQ": "fq",
-      "SORT": "sort",
-      "START": "start",
-      "ROWS": "rows",
-      "FL": "fl"
-    }
-  },
-  "CROSS_TABLE":{
-    "NEXT_PAGE": "Next",
-    "PREVIOUS_PAGE": "Previous",
-    "SHOW": "Show",
-    "ENTRIES": "entries",
-    "EXPORT": "Export"
-  },
-  "HELP_MESSAGE":{
-    "CHINAMAP":{
-      "COLUMN":"For the [Mark Line Map] indicating the source of the reticle, Needs 2 or 3 values, 2 values are: 'longitude, latitude', 'geographical name'; 3 values are: 'longitude', 'latitude', 'geographical name'.",
-      "ROW":"Needs 2 or 3 values, 2 values are: 'longitude, latitude', 'geographical name', 3 values are: 'longitude', 'latitude', 'geographical name', map is the [Mark Line Map] indicates the end of the mark."
-    },
-    "CHINAMAPBMAP": {
-      "COLUMN":"For the [Mark Line Map], indicating the source of the reticle, Needs 2 or 3 values, 2 values are: 'longitude, latitude', 'geographical name'; 3 values are: 'longitude', 'latitude', 'geographical name'.",
-      "ROW":"Needs 2 or 3 values, 2 values are: 'longitude, latitude', 'geographical name', 3 values are: 'longitude', 'latitude', 'geographical name', map is the [Mark Line Map] indicates the end of the mark."
+      "ENCODING": "Encoding<UTF-8>",
+      "SEPRATOR": "Seprator<TAB>",
+      "ENCLOSURE": "Enclosure<Empty>"
     }
   }
 }

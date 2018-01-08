@@ -1,3 +1,4 @@
+<!--0.2升级到0.3.2需要修改的地方-->
 CREATE TABLE dashboard_job (
   job_id bigint(20) NOT NULL AUTO_INCREMENT,
   job_name varchar(200) DEFAULT NULL,
@@ -22,4 +23,3 @@ CREATE TABLE dashboard_board_param (
   config text,
   PRIMARY KEY (board_param_id)
 );
-

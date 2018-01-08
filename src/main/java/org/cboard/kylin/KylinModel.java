@@ -19,10 +19,9 @@ class KylinModel implements Serializable {
     private Map<String, String> columnTable = new HashedMap();
     private Map<String, String> tableAlias = new TableMap();
     private Map<String, String> columnType = new HashedMap();
-    private static final String QUOTATAION = "\"";
 
     public String getColumnAndAlias(String column) {
-        return tableAlias.get(columnTable.get(column)) + "." + surroundWithQuta(column);
+        return tableAlias.get(columnTable.get(column)) + ".\"" + column + "\"";
     }
 
     public String getTable(String column) {
@@ -92,12 +91,11 @@ class KylinModel implements Serializable {
             String[] fk = j.getJSONObject("join").getJSONArray("foreign_key").stream().map(p -> p.toString()).toArray(String[]::new);
             List<String> on = new ArrayList<>();
             for (int i = 0; i < pk.length; i++) {
-                on.add(String.format("%s.%s = %s.%s", tableAlias.get(j.getString("table")),
-                        surroundWithQuta(pk[i]), factAlias, surroundWithQuta(fk[i])));
+                on.add(String.format("%s.%s = %s.%s", tableAlias.get(j.getString("table")), pk[i], factAlias, fk[i]));
             }
             String type = j.getJSONObject("join").getString("type").toUpperCase();
             String pTable = formatTableName(j.getString("table"));
-            String onStr = on.stream().collect(Collectors.joining(" and "));
+            String onStr = on.stream().collect(Collectors.joining(" "));
             return String.format("\n %s JOIN %s %s ON %s", type, pTable, tableAlias.get(pTable), onStr);
         }).collect(Collectors.joining(" "));
         return s;
@@ -115,12 +113,7 @@ class KylinModel implements Serializable {
     public String formatTableName(String rawName) {
         String tmp = rawName.replaceAll("\"", "");
         StringJoiner joiner = new StringJoiner(".");
-        Arrays.stream(tmp.split("\\.")).map(i -> surroundWithQuta(i)).forEach(joiner::add);
+        Arrays.stream(tmp.split("\\.")).map(i -> "\"" + i + "\"").forEach(joiner::add);
         return joiner.toString();
     }
-
-    private String surroundWithQuta(String text) {
-        return QUOTATAION + text + QUOTATAION;
-    }
-
 }

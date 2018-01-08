@@ -35,7 +35,7 @@ cBoard.service('chartFunnelService', function () {
                     normal: {
                         formatter: function (params) {
                             if(params.data.percent!=100)
-                                return params.value + "\n"+params.data.percent + "%"+"\n"+params.data.percentForNext+"%";
+                            return params.value + "\n"+params.data.percent + "%"+"\n"+params.data.percentForNext+"%";
                             else
                                 return params.value
                         },

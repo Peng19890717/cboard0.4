@@ -1,4 +1,5 @@
 <ng-switch on="board.layout.type">
+    {{board.layout.type}}
     <div ng-switch-when="timeline">
         <div ng-include="'org/cboard/view/dashboard/layout/timeline.html'"></div>
     </div>
@@ -6,3 +7,23 @@
         <div ng-include="'org/cboard/view/dashboard/layout/grid.html'"></div>
     </div>
 </ng-switch>
+<!--<style>-->
+    <!--.table_wrapper table td.row {-->
+        <!--border-top: 1px solid #d5d5d5;-->
+        <!--white-space: nowrap;-->
+        <!--text-align: center;-->
+    <!--}-->
+    <!--.table_wrapper table td {-->
+        <!--background: #f9f9f9;-->
+        <!--border-left: 1px solid #d5d5d5;-->
+    <!--}-->
+    <!--.table_wrapper table td div,table th div{padding: 3px;}-->
+    <!--.table_wrapper table {-->
+        <!--table-layout: fixed;-->
+    <!--}-->
+    <!--.table_wrapper table td div,table th div{-->
+        <!--word-wrap: break-word;-->
+        <!--overflow: hidden;-->
+        <!--white-space: pre-wrap;-->
+    <!--}-->
+<!--</style>-->

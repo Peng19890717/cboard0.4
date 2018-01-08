@@ -2,9 +2,7 @@
  * Created by yfyuan on 2016/8/2.
  */
 'use strict';
-cBoard.controller('boardCtrl',
-    function ($rootScope, $scope, $http, ModalUtils, $filter, updateService, $uibModal,
-              $timeout, dataService, $state, $window, $stateParams) {
+cBoard.controller('boardCtrl', function ($rootScope, $scope, $http, ModalUtils, $filter, updateService, $uibModal, $timeout, dataService, $state, $window) {
     var translate = $filter('translate');
 
     $scope.optFlag = 'none';
@@ -19,7 +17,7 @@ cBoard.controller('boardCtrl',
     var updateUrl = "dashboard/updateBoard.do";
 
     var getBoardList = function () {
-        return $http.get("dashboard/getBoardList.do").success(function (response) {
+        $http.get("dashboard/getBoardList.do").success(function (response) {
             $scope.boardList = response;
             originalData = jstree_CvtVPath2TreeData(
                 $scope.boardList.map(function (ds) {
@@ -130,7 +128,7 @@ cBoard.controller('boardCtrl',
         $scope.$emit("boardChange");
     };
 
-    var boardListPromise = getBoardList();
+    getBoardList();
     getCategoryList();
     getDatasetList();
 
@@ -192,28 +190,20 @@ cBoard.controller('boardCtrl',
         });
     };
 
-    $scope.showInfo = function () {
-        if (!checkTreeNode("info")) return;
-        var content = getSelectedBoard();
-        ModalUtils.info(content, "modal-info", "lg");
-    };
-
     $scope.widgetGroup = function (item) {
         return item.categoryName;
     };
 
     $scope.addWidget = function (row) {
         var w = {};
-        w.name = translate('CONFIG.DASHBOARD.CHART_NAME');
+        w.name = '图表名称';
         w.width = 12;
         w.widgetId = $scope.widgetList[0].id;
         row.widgets.push(w);
     };
 
     $scope.addRow = function () {
-        var row = {type: 'widget', widgets: []};
-        $scope.curBoard.layout.rows.push(row);
-        return row;
+        $scope.curBoard.layout.rows.push({type: 'widget', widgets: []});
     };
 
     $scope.addNode = function (node) {
@@ -222,18 +212,6 @@ cBoard.controller('boardCtrl',
 
     $scope.addPramRow = function () {
         $scope.curBoard.layout.rows.unshift({type: 'param', params: []});
-    };
-
-    $scope.addRelations = function(widget) {
-        widget.relations = {};
-        widget.relations.relations = [];
-        $scope.changeSourceCol(widget, widget.widgetId);
-    };
-
-    $scope.delRelations = function(widget) {
-        if(widget.relations){
-          delete widget.relations;
-        }
     };
 
     var validate = function () {
@@ -263,48 +241,27 @@ cBoard.controller('boardCtrl',
 
     $scope.checkBeforPreview = function (Id) {
         $scope.isPreview = true;
-        if (!validate()) {
-            return;
-        }
         ModalUtils.confirm(translate("COMMON.CONFIRM_SAVE_BEFORE_PREVIEW"), "modal-warning", "lg", function () {
-            $scope.saveBoard(false)
+            var newTab = $window.open('', '_blank');
+            $scope.saveBoard()
                 .then(function () {
                     if (!Id) {
                         Id = $scope.curBoard.id;
                     }
-                    $state.go('mine.view', {id: Id});
+                    var url = $state.href('mine.view', {id: Id});
+                    newTab.location.href = url;
                 });
         });
     };
-
-    $scope.saveBoard = function (notify) {
+    $scope.saveBoard = function () {
         if (!validate()) {
             return;
         }
-        clearDirty();
-        var callBack = saveBoardCallBack;
-        if (notify == false) {
-            callBack = function() {};
-        }
         if ($scope.optFlag == 'new') {
-            return $http.post("dashboard/saveNewBoard.do", {json: angular.toJson($scope.curBoard)}).success(callBack);
+            return $http.post("dashboard/saveNewBoard.do", {json: angular.toJson($scope.curBoard)}).success(saveBoardCallBack);
         } else if ($scope.optFlag == 'edit') {
-            return $http.post(updateUrl, {json: angular.toJson($scope.curBoard)}).success(callBack);
+            return $http.post(updateUrl, {json: angular.toJson($scope.curBoard)}).success(saveBoardCallBack);
         }
-    };
-
-    var clearDirty = function () {
-        _.each($scope.curBoard.layout.rows, function(row){
-            _.each(row.widgets, function(widget){
-                delete widget.sourceId;
-                if(!_.isUndefined(widget.relations)){
-                    delete widget.relations.sourceFields;
-                    _.each(widget.relations.relations, function(relation){
-                        delete relation.targetFields;
-                    });
-                }
-            });
-        })
     };
 
     $scope.editParam = function (row, index) {
@@ -334,8 +291,8 @@ cBoard.controller('boardCtrl',
             size: 'lg',
             controller: function ($scope, $uibModalInstance) {
                 $scope.param_types = [
-                    {name: translate('CONFIG.DASHBOARD.PARAM_TYPE_SELECTOR'), value: 'selector'},
-                    {name: translate('CONFIG.DASHBOARD.PARAM_TYPE_SLIDER'), value: 'slider'}
+                    {name: 'selector', value: 'selector'},
+                    {name: 'slider', value: 'slider'}
                 ];
                 $scope.status = status;
                 $scope.param = param;
@@ -372,7 +329,7 @@ cBoard.controller('boardCtrl',
                         ok($scope.param);
                         $uibModalInstance.close();
                     } else {
-                        ModalUtils.alert(translate('CONFIG.DASHBOARD.ENTER_PARAMETER_NAME'), "modal-warning", "lg");
+                        ModalUtils.alert('Please fill out the information', "modal-warning", "lg");
                     }
                 };
                 $scope.foldCube = function (cube, e) {
@@ -446,8 +403,6 @@ cBoard.controller('boardCtrl',
     $scope.editNode = function () {
         if (!checkTreeNode("edit")) return;
         $scope.editBoard(getSelectedBoard());
-        var selectedNode = jstree_GetSelectedNodes(treeID)[0];
-        $state.go('config.board', {boardId: selectedNode.id}, {notify: false});
     };
 
     $scope.deleteNode = function () {
@@ -464,159 +419,4 @@ cBoard.controller('boardCtrl',
         return baseEventObj;
     }();
     /**  js tree related start **/
-
-    $scope.changeTargetCol = function (e, widgetId, index, row) {
-        if (!e.relations) {
-            return;
-        }
-        var w = _.find($scope.widgetList, function (w) {
-            return w.id == widgetId;
-        });
-        if (!w) {
-            return;
-        }
-        var dataSet = _.find($scope.datasetList, function (e) {
-            return w.data.datasetId === e.id;
-        });
-        var cols = [];
-        _.each(dataSet.data.schema.dimension, function (e) {
-            if (e.type == "column") {
-                if ($.inArray(e, cols) == -1) {
-                    cols.push(e.column);
-                }
-            } else if (e.type == "level") {
-                _.each(e.columns, function (e) {
-                    if ($.inArray(e, cols) == -1) {
-                        cols.push(e.column);
-                    }
-                });
-            }
-        });
-        e.relations.relations[index].targetFields = cols;
-        if (cols.length == 0) {
-            dataService.getColumns({
-                datasource: null,
-                query: null,
-                datasetId: w.data.datasetId,
-                callback: function (dps) {
-                    $scope.alerts = [];
-                    if (dps.msg == "1") {
-                        e.relations.relations[index].targetFields = dps.columns;
-                    } else {
-                        $scope.alerts = [{msg: dps.msg, type: 'danger'}];
-                    }
-                }
-            });
-        }
-
-        //add target widget
-        var flattenWgts = [];
-        _.each($scope.curBoard.layout.rows, function (row) {
-            flattenWgts = flattenWgts.concat(row.widgets);
-        });
-        if (_.where(flattenWgts, {"widgetId": widgetId}).length > 0 || _.isUndefined(row)) {
-            return;
-        }
-        e.relations.relations[index].targetField = [];
-        var w = {};
-        w.name = _.find($scope.widgetList, function (e) {
-            return e.id === widgetId
-        }).name;
-        w.width = 12;
-        w.widgetId = widgetId;
-        w.sourceId = e.widgetId;
-        w.index = index;
-        row.widgets = _.filter(row.widgets, function (e) {
-            return e.sourceId !== w.sourceId || e.index !== index;
-        });
-        row.widgets.push(w);
-    };
-
-    $scope.changeSourceCol = function (e, widgetId) {
-        if (!e.relations) {
-            return;
-        }
-        //源表字段默认为原表的group key指定字段
-        $http.get("dashboard/dashboardWidget.do?id=" + e.widgetId).then(function (response) {
-            if (!response) {
-                return false;
-            }
-            var config = response.data.data.config;
-            var fields = [];
-            _.each(config.groups, function (e) {
-                fields.push(e.col);
-            });
-            _.each(config.keys, function (e) {
-                fields.push(e.col);
-            });
-            if(!e.relations.sourceField || e.relations.sourceField.length<=0){
-                e.relations.sourceField = fields;
-            }
-            e.relations.sourceFields = fields;
-        });
-    };
-
-    $scope.changeTargetParam = function (e, boardId, index) {
-        if (!e.relations) {
-            return;
-        }
-        var w = _.find($scope.boardList, function (w) {
-            return w.id == boardId;
-        });
-        if (!w) {
-            return;
-        }
-        var cols = [];
-        _.each(w.layout.rows, function (row) {
-            if (row.type == "param") {
-                _.each(row.params, function(param){
-                    _.each(param.col, function(col){
-                        if($.inArray(param.name, cols) == -1){
-                            cols.push(param.name); //col.column+"("+col.datasetId+")"
-                        }
-                    });
-                });
-            }
-        });
-        //e.relations.relations[index].targetField = [];
-        e.relations.relations[index].targetFields = cols;
-
-    };
-
-    $scope.addWidgetRelation = function(widget){
-        widget.relations.relations.push({"type":"widget"});
-        $('div.newRelation').addClass('hideOperate');
-    };
-
-    $scope.addBoardRelation = function(widget){
-        widget.relations.relations.push({"type":"board"});
-        $('div.newRelation').addClass('hideOperate');
-    };
-
-    $scope.changeActive = function(rowIndex, widgetIndex, index){
-        var prefixId = rowIndex+"_"+widgetIndex+"_";
-        var list = $('li[id^='+prefixId+'].active');
-        if(list.length > 0 && list[0].id.split("_")[2] != index){
-            return;
-        }
-        if(index-1<0){
-            index = 0;
-        }else{
-            index = index-1;
-        }
-        $("#"+prefixId+index+"_"+"tab").addClass('active');
-        $("#"+prefixId+index+"_"+"content").addClass('active');
-    };
-
-    var paramBoardId = $stateParams.boardId;
-    if (paramBoardId) {
-        boardListPromise.then(function () {
-            var board = _.find($scope.boardList, function (ds) {
-                return ds.id == paramBoardId;
-            });
-            if (board) {
-                $scope.editBoard(board)
-            }
-        });
-    }
 });

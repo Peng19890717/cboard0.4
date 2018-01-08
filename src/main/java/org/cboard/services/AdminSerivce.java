@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,15 +64,6 @@ public class AdminSerivce {
             user.setUserPassword(md5);
         }
         userDao.update(user);
-        return "1";
-    }
-
-    @Transactional
-    public String deleteUser(String userId) {
-        userDao.deleteUserById(userId);
-        Map param = new HashMap<String,String>();
-        param.put("objUid", userId);
-        userDao.deleteUserRole(param);
         return "1";
     }
 
@@ -141,14 +131,16 @@ public class AdminSerivce {
         for (Object res : arr) {
             JSONObject jo = (JSONObject) res;
             roleDao.deleteRoleResByResId(jo.getLong("resId"), jo.getString("resType"));
+            List<DashboardRoleRes> list = new ArrayList<>();
             for (String rid : roleId) {
                 DashboardRoleRes roleRes = new DashboardRoleRes();
                 roleRes.setRoleId(rid);
                 roleRes.setResId(jo.getLong("resId"));
                 roleRes.setResType(jo.getString("resType"));
                 roleRes.setPermission("" + (false ? 1 : 0) + (false ? 1 : 0));
-                roleDao.saveRoleRes(roleRes);
-            }            
+                list.add(roleRes);
+            }
+            roleDao.saveRoleRes(list);
         }
         return "1";
     }
@@ -159,6 +151,7 @@ public class AdminSerivce {
         for (String rid : roleId) {
             roleDao.deleteRoleRes(rid);
             if (arr != null && arr.size() > 0) {
+                List<DashboardRoleRes> list = new ArrayList<>();
                 for (Object res : arr) {
                     JSONObject jo = (JSONObject) res;
                     DashboardRoleRes roleRes = new DashboardRoleRes();
@@ -168,8 +161,9 @@ public class AdminSerivce {
                     boolean edit = jo.getBooleanValue("edit");
                     boolean delete = jo.getBooleanValue("delete");
                     roleRes.setPermission("" + (edit ? 1 : 0) + (delete ? 1 : 0));
-                    roleDao.saveRoleRes(roleRes);
+                    list.add(roleRes);
                 }
+                roleDao.saveRoleRes(list);
             }
         }
         return "1";

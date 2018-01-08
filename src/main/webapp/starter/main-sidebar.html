@@ -12,7 +12,7 @@
     </div>
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu">
-        <li class="header">{{'SIDEBAR.MENU'|translate}}</li>
+        <li class="header">MENU</li>
         <!-- DashBoard -->
         <li class="treeview" ui-sref-active="active">
             <a>
@@ -29,6 +29,7 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
+
                     <ul class="treeview-menu">
                         <li ui-sref-active="active" ng-repeat="b in boardList | filter:{categoryId:c.id}:true">
                             <a ui-sref="dashboard.category.view({id:b.id,category:c.name})"><i class="fa fa-dashboard"></i>{{b.name}}</a>
@@ -63,7 +64,7 @@
                     <a ui-sref="config.datasource"><i class="fa fa-database"></i>{{'SIDEBAR.DATA_SOURCE'|translate}}</a>
                 </li>
                 <li ui-sref-active="active" ng-if="isShowMenu('config.dataset')">
-                    <a ui-sref="config.dataset"><i class="fa fa-table"></i>{{'SIDEBAR.DATASET'|translate}}</a>
+                    <a ui-sref="config.dataset"><i class="fa fa-table"></i>{{'SIDEBAR.CUBE'|translate}}</a>
                 </li>
                 <li ui-sref-active="active" ng-if="isShowMenu('config.widget')">
                     <a ui-sref="config.widget"><i class="fa fa-line-chart"></i>{{'SIDEBAR.WIDGET'|translate}}</a>
@@ -91,33 +92,38 @@
                 <li ui-sref-active="active" ng-if="isShowMenu('config.customFunnel')">
                     <a ui-sref="config.customFunnel"><i class="fa fa-sort-amount-desc"></i>{{'SIDEBAR.FUNNEL_ANALYSIS'|translate}}</a>
                 </li>
+
+                <li ui-sref-active="active" ng-if="isShowMenu('config.menuSort')">
+                    <a ui-sref="config.menuSort"><i class="fa fa-sort-amount-desc"></i>{{'SIDEBAR.MENU_SORT'|translate}}</a>
+                </li>
                 <!--<li ui-sref-active="active" ng-if="isShowMenu('config.path_analysis')">-->
-                <!--<a ui-sref="config.path_analysis"><i class="fa fa-sort-amount-desc"></i>{{'SIDEBAR.PATH_ANALYSIS'|translate}}</a>-->
+                    <!--<a ui-sref="config.path_analysis"><i class="fa fa-sort-amount-desc"></i>{{'SIDEBAR.PATH_ANALYSIS'|translate}}</a>-->
                 <!--</li>-->
+                
 
 
 
+               <!-- <li ui-sref-active="active">
+                    <a ui-sref="config.newfunnel"><i class="fa fa-plus"></i>新建漏斗</a>
+                </li>
 
-                <!-- <li ui-sref-active="active">
-                     <a ui-sref="config.newfunnel"><i class="fa fa-plus"></i>新建漏斗</a>
-                 </li>
-
-                 <li ui-sref-active="active">
-                     <a ui-sref="config.customFunnel"><i class="fa fa-sort-amount-desc"></i>漏斗分析</a>
-                 </li>-->
+                <li ui-sref-active="active">
+                    <a ui-sref="config.customFunnel"><i class="fa fa-sort-amount-desc"></i>漏斗分析</a>
+                </li>-->
                 <!--<li ui-sref-active="active">-->
-                <!--<a ui-sref="config.newroute"><i class="fa fa-plus"></i>新建路径</a>-->
-                <!--</li>-->
-                <!--<li ui-sref-active="active">-->
-                <!--<a ui-sref="config.event"><i class="fa fa-sitemap"></i>路径分析</a>-->
-                <!--</li>-->
-                <!-- hkl 6.19注释掉-->
-                <!--<li ui-sref-active="active">-->
-                <!--<a ui-sref="config.route"><i class="fa fa-server"></i>事件分析</a>-->
+                    <!--<a ui-sref="config.newroute"><i class="fa fa-plus"></i>新建路径</a>-->
                 <!--</li>-->
                 <!--<li ui-sref-active="active">-->
-                <!--<a ui-sref="config.path_analysis"><i class="fa fa-plus"></i>路径分析</a>-->
+                    <!--<a ui-sref="config.event"><i class="fa fa-sitemap"></i>路径分析</a>-->
                 <!--</li>-->
+               <!-- hkl 6.19注释掉-->
+                <!--<li ui-sref-active="active">-->
+                    <!--<a ui-sref="config.route"><i class="fa fa-server"></i>事件分析</a>-->
+                <!--</li>-->
+                <!--<li ui-sref-active="active">-->
+                    <!--<a ui-sref="config.path_analysis"><i class="fa fa-plus"></i>路径分析</a>-->
+                <!--</li>-->
+
             </ul>
         </li>
         <!-- Admin -->
@@ -136,6 +142,23 @@
             </ul>
         </li>
     </ul>
+
+    <!--<ul id="sortable">-->
+        <!--<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>-->
+        <!--<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>-->
+        <!--<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>-->
+        <!--<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>-->
+        <!--<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>-->
+        <!--<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>-->
+        <!--<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>-->
+    <!--</ul>-->
     <!-- /.sidebar-menu -->
 </section>
+
+<!--<script>-->
+    <!--$( function() {-->
+        <!--$( "#sortable" ).sortable();-->
+        <!--$( "#sortable" ).disableSelection();-->
+    <!--} );-->
+<!--</script>-->
 <!-- /.sidebar -->

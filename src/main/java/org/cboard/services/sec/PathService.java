@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class PathService {
 
-//    @Autowired（kylin的先不用了）
+    @Autowired
     private KylinDao kylinDao;
     @Autowired
     private DocDao docDao;

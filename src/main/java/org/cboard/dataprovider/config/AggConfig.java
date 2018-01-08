@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 这个类是干什么的
  * Created by zyong on 2017/1/9.
+ *
  */
 public class AggConfig {
 

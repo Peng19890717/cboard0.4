@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
+ * 执行Around方法之前需要执行这里的q方法来进行权限的校验
  * Created by yfyuan on 2016/12/14.
  */
 @Repository

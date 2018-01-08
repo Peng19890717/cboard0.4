@@ -4,7 +4,6 @@
 
 'user strict';
 cBoard.service('freeLayoutService', function($http) {
-    this.saveData = [];
     this.setHeight = ()=>{
         const height = $(window).height() + 'px';
 
@@ -36,23 +35,14 @@ cBoard.service('freeLayoutService', function($http) {
         return promise;
     };
 
-    this.widgetSave = (args)=>{
-
-    };
-
     this.widgetDrag = (panel, $scope, callback)=>{
         let _this = this;
 
         panel.on({
             dragover(ev) {
                 ev.preventDefault();
-                // console.log(ev.offsetX);
             },
-            // mousemove(e) {
-            //     // console.log(e.offsetX);
-            // },
             dragenter(ev) {
-                // console.log(ev.offsetX);
                 // $('.drag-preview').removeClass('hideOperate');
                 // $('.drag-preview').css({
                 //     width: panel[0].clientWidth - ev.offsetX + 'px',
@@ -62,27 +52,16 @@ cBoard.service('freeLayoutService', function($http) {
                 // });
             },
             drop(e) {
-                let panelWidth = panel[0].clientWidth,
-                    panelHeight = panel[0].clientHeight,
-                    gridHeight = panelHeight / 47,
-                    gridWidth = panelWidth / 47,
-                    chartWidth = panelWidth - e.offsetX + 'px',
-                    // percentWidth = gridWidth / panelWidth,
-                    gridX = parseInt(e.offsetX / gridWidth),
-                    gridEx = parseInt((e.offsetX + chartWidth) / gridWidth),
-                    gridY = parseInt(e.offsetY / gridHeight),
-                    gridEy = parseInt((e.offsetY + 350) / gridHeight),
-                    gridLeft = gridX * gridWidth,
-                    gridTop = gridY * gridHeight,
-                    widget = e.originalEvent.dataTransfer.getData('Text'),
-                    reportId = _this.widget();
+                // $('.drag-preview').addClass('hideOperate');
+                let widget = e.originalEvent.dataTransfer.getData('Text');
+                let reportId = _this.widget();
 
                 widget = widget ? JSON.parse(widget) : null;
                 $('.widget_' + reportId).css({
-                    width: chartWidth,
+                    width: panel[0].clientWidth - e.offsetX + 'px',
                     height: '350px',
-                    left: gridLeft + 'px',
-                    top: gridTop + 'px'
+                    left: e.offsetX + 'px',
+                    top: e.offsetY + 'px'
                 });
                 let obj = {
                     config: widget.data.config,
@@ -148,15 +127,6 @@ cBoard.service('freeLayoutService', function($http) {
                     }
                 });
                 _this.widgetMove();
-                let params = {
-                    reportId: reportId,
-                    x: gridX + 1,
-                    ex: gridEx + 1,
-                    y: gridY + 1,
-                    ey: gridEy + 1
-                };
-
-                _this.saveData.push(params);
             }
         });
     };

@@ -12,6 +12,7 @@
   max-width: none;
   z-index: 3000;
 }
+
 .daterangepicker.opensleft .ranges, .daterangepicker.opensleft .calendar {
   float: left;
   margin: 4px;
@@ -239,12 +240,10 @@
   border-color: #3071a9;
   color: #fff;
 }
-
 .daterangepicker td.week, .daterangepicker th.week {
   font-size: 80%;
   color: #ccc;
 }
-
 .daterangepicker select.monthselect, .daterangepicker select.yearselect {
   font-size: 12px;
   padding: 1px;
@@ -252,26 +251,21 @@
   margin: 0;
   cursor: default;
 }
-
 .daterangepicker select.monthselect {
   margin-right: 2%;
   width: 56%;
 }
-
 .daterangepicker select.yearselect {
   width: 40%;
 }
-
 .daterangepicker select.hourselect, .daterangepicker select.minuteselect, .daterangepicker select.ampmselect {
   width: 50px;
   margin-bottom: 0;
 }
-
 .daterangepicker_start_input {
   float: left;
   display: none;
 }
-
 .daterangepicker_end_input {
   float: left; 
   padding-left: 11px;

@@ -1,6 +1,8 @@
 package org.cboard.services.job;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.diamond.client.PropertiesConfiguration;
+import com.github.diamond.client.PropertiesConfigurationFactoryBean;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.cboard.dao.JobDao;
 import org.cboard.dto.ViewDashboardJob;
@@ -28,6 +30,9 @@ import java.util.TimeZone;
 @Service
 public class JobService implements InitializingBean {
 
+    //配置服务器定义
+    private static PropertiesConfiguration config = PropertiesConfigurationFactoryBean.getPropertiesConfiguration();
+
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
 
@@ -40,7 +45,7 @@ public class JobService implements InitializingBean {
     @Autowired
     private MailService mailService;
 
-    private static Logger LOG = LoggerFactory.getLogger(JobService.class);
+    private static Logger logger = LoggerFactory.getLogger(JobService.class);
 
     public void configScheduler() {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -48,7 +53,7 @@ public class JobService implements InitializingBean {
         try {
             scheduler.clear();
         } catch (SchedulerException e) {
-            LOG.error("" , e);
+            e.printStackTrace();
         }
         List<DashboardJob> jobList = jobDao.getJobList(adminUserId);
         for (DashboardJob job : jobList) {
@@ -68,9 +73,9 @@ public class JobService implements InitializingBean {
                 jobDetail.getJobDataMap().put("job", job);
                 scheduler.scheduleJob(jobDetail, trigger);
             } catch (SchedulerException e) {
-                LOG.error("{} Job id: {}", e.getMessage(), job.getId());
+                logger.error("{} Job id: {}", e.getMessage(), job.getId());
             } catch (Exception e) {
-                LOG.error("" , e);
+                e.printStackTrace();
             }
         }
     }
@@ -90,7 +95,6 @@ public class JobService implements InitializingBean {
             mailService.sendDashboard(job);
             jobDao.updateStatus(job.getId(), ViewDashboardJob.STATUS_FINISH, "");
         } catch (Exception e) {
-            LOG.error("" , e);
             jobDao.updateStatus(job.getId(), ViewDashboardJob.STATUS_FAIL, ExceptionUtils.getStackTrace(e));
         }
     }
@@ -108,7 +112,7 @@ public class JobService implements InitializingBean {
             job.setStartDate(format.parse(jsonObject.getJSONObject("daterange").getString("startDate")));
             job.setEndDate(format.parse(jsonObject.getJSONObject("daterange").getString("endDate")));
         } catch (ParseException e) {
-            LOG.error("" , e);
+            e.printStackTrace();
         }
         job.setJobType(jsonObject.getString("jobType"));
         jobDao.save(job);
@@ -129,7 +133,7 @@ public class JobService implements InitializingBean {
             job.setStartDate(format.parse(jsonObject.getJSONObject("daterange").getString("startDate")));
             job.setEndDate(format.parse(jsonObject.getJSONObject("daterange").getString("endDate")));
         } catch (ParseException e) {
-            LOG.error("" , e);
+            e.printStackTrace();
         }
         job.setJobType(jsonObject.getString("jobType"));
         jobDao.update(job);

@@ -197,61 +197,29 @@ cBoard.controller('userAdminCtrl', function ($scope, $http, ModalUtils, $filter)
     };
 
     var getContextMenu = function ($node) {
-        function toggleACL(attr) {
-            return function(obj) {
-                $node.original[attr] = $node.original[attr] == undefined ? false : !$node.original[attr];
-                _.each($node.children_d, function (e) {
-                    var tree = $(obj.reference).jstree(true);
-                    var node = tree.get_node(e);
-                    if (node.children.length == 0) {
-                        node.original[attr] = $node.original[attr];
-                        tree.rename_node(node, node.original.name + getCUDRlabel(node.original[attr], node.original.delete));
-                    }
-                });
-            }
+        if (_.isUndefined($node.original.resId) || $node.original.type == 'menu') {
+            return;
         }
-
-        if (_.isUndefined($node.original.resId)) {
-            if ($node.parent != '#') {
-                return {
-                    edit: {
-                        label: function () {
-                            return translate('ADMIN.TOGGLE_UPDATE');
-                        },
-                        action: toggleACL('update')
-                    },
-                    delete: {
-                        label: function () {
-                            return translate('ADMIN.TOGGLE_DELETE');
-                        },
-                        action: toggleACL('delete')
-                    }
-                };
-            } else {
-                return;
-            }
-        } else {
-            return {
-                edit: {
-                    label: function () {
-                        return $node.original.edit ? '√ Update' : '× Update';
-                    },
-                    action: function (obj) {
-                        $node.original.edit = !$node.original.edit;
-                        $(obj.reference).jstree(true).rename_node($node, $node.original.name + getCUDRlabel($node.original.edit, $node.original.delete));
-                    }
+        return {
+            edit: {
+                label: function () {
+                    return $node.original.edit ? '√ Update' : '× Update';
                 },
-                delete: {
-                    label: function () {
-                        return $node.original.delete ? '√ Delete' : '× Delete';
-                    },
-                    action: function (obj) {
-                        $node.original.delete = !$node.original.delete;
-                        $(obj.reference).jstree(true).rename_node($node, $node.original.name + getCUDRlabel($node.original.edit, $node.original.delete));
-                    }
+                action: function (obj) {
+                    $node.original.edit = !$node.original.edit;
+                    $(obj.reference).jstree(true).rename_node($node, $node.original.name + getCUDRlabel($node.original.edit, $node.original.delete));
                 }
-            };
-        }
+            },
+            delete: {
+                label: function () {
+                    return $node.original.delete ? '√ Delete' : '× Delete';
+                },
+                action: function (obj) {
+                    $node.original.delete = !$node.original.delete;
+                    $(obj.reference).jstree(true).rename_node($node, $node.original.name + getCUDRlabel($node.original.edit, $node.original.delete));
+                }
+            }
+        };
     };
 
     var loadResData = function () {
@@ -279,8 +247,7 @@ cBoard.controller('userAdminCtrl', function ($scope, $http, ModalUtils, $filter)
                     three_state: true
                 },
                 contextmenu: {
-                    items: getContextMenu,
-                    select_node: false
+                    items: getContextMenu
                 },
                 version: 1,
                 plugins: ['types', 'checkbox', 'unique', 'contextmenu']
@@ -318,7 +285,7 @@ cBoard.controller('userAdminCtrl', function ($scope, $http, ModalUtils, $filter)
             return e == user.userId;
         }))
     };
-
+    
     $scope.searchUserByName = function (user) {
         if ($scope.userKeyword === "" || $scope.userKeyword === undefined) return true;
         if (!$scope.filterByRole) {
@@ -552,22 +519,6 @@ cBoard.controller('userAdminCtrl', function ($scope, $http, ModalUtils, $filter)
                     $scope.selectRes = null;
                     getRoleList();
                     getRoleResList();
-                    ModalUtils.alert(translate("COMMON.SUCCESS"), "modal-success", "sm");
-                } else {
-                    $scope.alerts = [{msg: serviceStatus.msg, type: 'danger'}];
-                }
-            });
-        });
-    }
-
-    $scope.deleteUser = function () {
-        ModalUtils.confirm(translate("COMMON.CONFIRM_DELETE"), "modal-info", "lg", function () {
-            $http.post("admin/deleteUser.do", {
-                userId: $scope.selectUser[0].userId
-            }).success(function (serviceStatus) {
-                if (serviceStatus == '1') {
-                    $scope.selectUser = null;
-                    getUserList();
                     ModalUtils.alert(translate("COMMON.SUCCESS"), "modal-success", "sm");
                 } else {
                     $scope.alerts = [{msg: serviceStatus.msg, type: 'danger'}];

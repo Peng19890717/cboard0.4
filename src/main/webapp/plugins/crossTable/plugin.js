@@ -7,7 +7,7 @@ var crossTable = {
         var data = args.data,
             chartConfig = args.chartConfig,
             tall = args.tall,
-            pageDataNum = 20,
+            pageDataNum = 10,
             drill = args.drill,
             random = Math.random().toString(36).substring(2),
             container = args.container;
@@ -83,59 +83,43 @@ var crossTable = {
         var rowNum = colNum ? data.length - headerLines : 0;
         var trDom = this.render(dataPage[0], chartConfig, drill);
         html = html + trDom + "</tbody></table>";
-        var optionDom = "<select><option value='20'>20</option><option value='50'>50</option><option value='100'>100</option><option value='150'>150</option></select>";
+        var optionDom = "<select><option value='10'>10</option><option value='20'>20</option><option value='50'>50</option><option value='100'>100</option><option value='150'>150</option></select>";
         var p_class = "p_" + random;
-        var PaginationDom = "<div class='" + p_class + "'><div class='optionNum'><span>" + cboardTranslate("CROSS_TABLE.SHOW") + "</span>" + optionDom + "<span>" + cboardTranslate("CROSS_TABLE.ENTRIES") + "</span></div><div class='page'><ul></ul></div></div>";
+        var PaginationDom = "<div class='" + p_class + "'><div class='optionNum'><span>Show</span>" + optionDom + "<span>entries</span></div><div class='page'><ul></ul></div></div>";
         var operate = "<div class='toolbar toolbar" + random + "'><span class='info'><b>info: </b>" + rowNum + " x " + colNum + "</span>" +
-            "<span class='exportBnt' title='" + cboardTranslate("CROSS_TABLE.EXPORT") + "'></span></div>";
+            "<span class='exportBnt' title='export'></span></div>";
         $(container).html(operate);
         $(container).append("<div class='tableView table_" + random + "' style='width:99%;max-height:" + tall + "px;overflow:auto'>" + html + "</div>");
         $(container).append(PaginationDom);
+        var self=this;
+        $('.p_' + random).on('change', '.optionNum select', function (e) {
+            var pageDataNum = e.target.value;
+            var dataPage = self.paginationProcessData(data,headerLines, pageDataNum);
+            var dom = $(e.target.offsetParent).find('.page>ul')[0];
+            var tbody = $(e.target.offsetParent).find('tbody')[0];
+            tbody.innerHTML = (self.render(dataPage[0], chartConfig, drill));
+            var pageObj = {
+                data: dataPage,
+                chartConfig: chartConfig,
+                drill: drill
+            };
+            self.renderPagination(dataPage.length, 1,pageObj, dom,random);
+        });
         var pageObj = {
             data: dataPage,
             chartConfig: chartConfig,
             drill: drill
         };
-        data.length ? this.renderPagination(dataPage.length, 1, pageObj, $('.' + p_class + ' .page>ul')[0]) : null;
-        this.clickPageNum(dataPage, chartConfig, drill, p_class);
-        this.clickNextPrev(dataPage.length, pageObj, p_class);
-        this.selectDataNum(data, chartConfig.groups.length + 1, chartConfig, drill, p_class, "table_" + random, args.render);
-        this.export(random, data);
-    },
-    bandDrillEvent: function (t_class, drill, render) {
-        $('.' + t_class + ' .table_drill_cell[drill-down]').click(function(){
-            var down = $(this).attr('drill-down');
-            var value = $(this).html();
-            drill.drillDown(down, value, render);
-        });
-        $.contextMenu({
-            selector: '.' + t_class + ' .table_drill_cell',
-            build: function ($trigger, e) {
-                var down = $trigger.attr('drill-down');
-                var up = $trigger.attr('drill-up');
-                var value = $trigger.html();
-                var items = {};
-                if (up) {
-                    items.up = {name: cboardTranslate("COMMON.ROLL_UP"), icon: "fa-arrow-up"}
-                }
-                if (down) {
-                    items.down = {name: cboardTranslate("COMMON.DRILL_DOWN"), icon: "fa-arrow-down"}
-                }
-                return {
-                    callback: function (key, options) {
-                        if ('up' == key) {
-                            drill.drillUp(up, render);
-                        } else if ('down' == key) {
-                            drill.drillDown(down, value, render);
-                        }
-                    },
-                    items: items
-                };
-            }
-        });
 
+        data.length ? this.renderPagination(dataPage.length, 1, pageObj, $('.' + p_class + ' .page>ul')[0],random) : null;
+        this.export(random, data);
+        // this.clickPageNum(dataPage, chartConfig, drill, p_class);
+        // this.clickNextPrev(dataPage.length, pageObj, p_class);
+        // this.selectDataNum(data, chartConfig.groups.length + 1, chartConfig, drill, p_class);
+        // this.clickDrill("table_" + random, drill, args.render);
     },
     paginationProcessData: function (rawData, headerLines, pageSize) {
+        pageSize=parseInt(pageSize);
         var dataLength = rawData.length - headerLines;
         var lastPageLines = dataLength % pageSize;
         var fullSizePages = parseInt(dataLength / pageSize);
@@ -193,7 +177,6 @@ var crossTable = {
                 var rowParentCell = data[n][m - 1];
                 var cur_data = currentCell.data ? currentCell.data : "";
                 var keyId = chartConfig.keys[m].id;
-                var align = chartConfig.keys[m].align;
                 if (drill && drill.config[keyId] && (drill.config[keyId].down || drill.config[keyId].up)) {
                     var d = "";
                     if (drill.config[keyId].down) {
@@ -208,66 +191,28 @@ var crossTable = {
                     if (currentCell.rowSpan == 'row_null' && rowParentCell.rowSpan == 'row_null' && !isFirstLine) {
                         rowContent += "<th class=row_null><div></div></th>";
                     } else {
-                        rowContent += "<th style='text-align:"+align+"' class=row><div>" + cur_data + "</div></th>";
+                        rowContent += "<th class=row><div>" + cur_data + "</div></th>";
                     }
                 } else {
                     if (currentCell.rowSpan == 'row_null' && !isFirstLine) {
                         rowContent += "<th class=row_null><div></div></th>";
                     } else {
-                        rowContent += "<th style='text-align:"+align+"' class=row><div>" + cur_data + "</div></th>";
+                        rowContent += "<th class=row><div>" + cur_data + "</div></th>";
                     }
                 }
             }
             for (var y = chartConfig.keys.length; y < data[n].length; y++) {
-                var align = chartConfig.values[0].cols[(y-chartConfig.keys.length)%chartConfig.values[0].cols.length].align;
-                rowContent += "<td style='text-align:"+align+"'class=" + data[n][m].property + "><div>" + data[n][y].data + "</div></td>";
+                rowContent += "<td class=" + data[n][m].property + "><div>" + data[n][y].data + "</div></td>";
             }
             html = html + rowContent + "</tr>";
         }
         return html;
     },
-    selectDataNum: function (data, num, chartConfig, drill, random, t_class, render) {
-        var _this = this;
-        $('.' + random).on('change', '.optionNum select', function (e) {
-            var pageDataNum = e.target.value;
-            var dataPage = _this.paginationProcessData(data, num, pageDataNum);
+    renderPagination: function (pageCount, pageNumber, pageObj, target,random) {
 
-            var dom = $(e.target.offsetParent).find('.page>ul')[0];
-            var tbody = $(e.target.offsetParent).find('tbody')[0];
-            tbody.innerHTML = (_this.render(dataPage[0], chartConfig, drill));
-            _this.renderPagination(dataPage.length, 1, null, dom);
-            $('.' + random).off('click');
-            _this.clickPageNum(dataPage, chartConfig, drill, random);
-            var pageObj = {
-                data: dataPage,
-                chartConfig: chartConfig,
-                drill: drill
-            };
-            _this.clickNextPrev(dataPage.length, pageObj, random);
-        });
-        _this.bandDrillEvent(t_class, drill, render);
-    },
-    clickPageNum: function (data, chartConfig, drill, random) {
-        var _this = this;
-        $('.' + random).on('click', 'a.pageLink', function (e) {
-            var pageNum = e.target.innerText - 1;
-            var pageObj = {
-                data: data,
-                chartConfig: chartConfig,
-                drill: drill
-            };
-
-            var dom = $(e.target.offsetParent).find('.page>ul')[0];
-            var tbody = $(e.target.offsetParent).find('tbody')[0];
-            tbody.innerHTML = _this.render(data[pageNum], chartConfig, drill);
-            _this.renderPagination(data.length, parseInt(e.target.innerText), pageObj, dom);
-        });
-    },
-    renderPagination: function (pageCount, pageNumber, pageObj, target) {
-        if (pageCount == 1) {
-            return  target.innerHTML = '';
-        }
-        var liStr = '<li><a class="previewLink">' + cboardTranslate("CROSS_TABLE.PREVIOUS_PAGE") + '</a></li>';
+        console.log("pageCount="+pageCount);
+        var self=this;
+        var liStr = '<li><a class="previewLink">Preview</a></li>';
         if (pageCount < 10) {
             for (var a = 0; a < pageCount; a++) {
                 liStr += '<li><a class="pageLink">' + (a + 1) + '</a></li>';
@@ -304,7 +249,7 @@ var crossTable = {
                 }
             }
         }
-        liStr += '<li><a class="nextLink">' + cboardTranslate("CROSS_TABLE.NEXT_PAGE") + '</a></li>';
+        liStr += '<li><a class="nextLink">Next</a></li>';
         if (target) {
             target.innerHTML = liStr;
             if (pageNumber == 1) {
@@ -314,55 +259,53 @@ var crossTable = {
             }
             this.buttonColor(pageNumber, target);
         }
-        // else {
-        //     $('.page>ul').html(liStr);
-        //     if (pageNumber == 1) {
-        //         $('.page a.previewLink').addClass('hide');
-        //     } else if (pageNumber == pageCount) {
-        //         $('.page a.nextLink').addClass('hide');
-        //     }
-        //     this.buttonColor(pageNumber);
-        //     this.clickNextPrev(pageCount, pageObj);
-        // }
+        /**
+         * add by wanghaihua,单机页码触发的事件
+         */
+
+        $("a.pageLink",'.p_' + random).click(function (e) {
+            e.stopPropagation();
+            var pageNum = parseInt(e.target.innerText);
+            self.clickPageSize(pageNum,e,pageCount,pageObj,target);
+            self.renderPagination(pageCount, pageNum, pageObj, target,random);
+        })
+        $("a.nextLink",'.p_' + random).click(function (e) {
+            e.stopPropagation();
+            var currentNum=parseInt($("li a.current",target).text());
+            self.clickPageSize(currentNum+1,e,pageCount,pageObj,target);
+            self.renderPagination(pageCount, currentNum+1, pageObj, target,random);
+        })
+        $("a.previewLink",'.p_' + random).click(function (e) {
+            e.stopPropagation();
+            var currentNum=parseInt($("li a.current",target).text());
+            self.clickPageSize(currentNum-1,e,pageCount,pageObj,target);
+            self.renderPagination(pageCount, currentNum-1, pageObj, target,random);
+        })
+    },
+    clickPageSize:function (pageNum,e,pageCount,pageObj,target){
+        var dom = $(e.target.offsetParent).find('.page>ul')[0];
+        var tbody = $(e.target.offsetParent).find('tbody')[0];
+        tbody.innerHTML = this.render(pageObj.data[pageNum-1], pageObj.chartConfig, pageObj.drill);
+        if (pageNum== 1) {
+            target.childNodes[0].setAttribute('class', 'hide');
+            target.childNodes[target.childNodes.length - 1].removeAttribute('class', 'hide');
+        } else if (pageNum == pageCount) {
+            target.childNodes[0].removeAttribute("class");
+            target.childNodes[target.childNodes.length - 1].setAttribute('class', 'hide');
+        }else{
+            target.childNodes[0].removeAttribute("class");
+            target.childNodes[target.childNodes.length - 1].removeAttribute("class");
+        }
+        this.buttonColor(pageNum, target);
     },
     buttonColor: function (pageNum, target) {
+        $("li a.current",target).removeClass('current');
         if (target) {
             var buttons = target.childNodes;
             for (var i = 0; i < buttons.length; i++) {
                 buttons[i].childNodes[0].innerText == pageNum ? $(buttons[i].childNodes[0]).addClass('current') : null;
             }
         }
-    },
-    clickNextPrev: function (pageCount, pageObj, random) {
-        var _this = this;
-        $('.' + random).on('click', '.page a.previewLink', function (e) {
-            var kids = e.target.parentNode.parentNode.childNodes;
-            var dom = e.target.parentNode.parentNode.parentNode.childNodes[0];
-            var tbody = $(e.target.offsetParent).find('tbody')[0];
-
-            for (var i = 0; i < kids.length; i++) {
-                if (kids[i].childNodes[0].className.indexOf('current') > -1) {
-                    var pageNum = parseInt(kids[i].childNodes[0].text) - 1;
-                }
-            }
-            tbody.innerHTML = _this.render(pageObj.data[pageNum - 1], pageObj.chartConfig, pageObj.drill);
-            _this.renderPagination(pageCount, pageNum, pageObj, dom);
-            //_this.clickPageNum(pageObj.data, pageObj.chartConfig);
-        });
-        $('.' + random).on('click', '.page a.nextLink', function (e) {
-            var kids = e.target.parentNode.parentNode.childNodes;
-            var dom = e.target.parentNode.parentNode.parentNode.childNodes[0];
-            var tbody = $(e.target.offsetParent).find('tbody')[0];
-
-            for (var i = 0; i < kids.length; i++) {
-                if (kids[i].childNodes[0].className.indexOf('current') > -1) {
-                    var pageNum = parseInt(kids[i].childNodes[0].text) + 1;
-                }
-            }
-            tbody.innerHTML = _this.render(pageObj.data[pageNum - 1], pageObj.chartConfig, pageObj.drill);
-            _this.renderPagination(pageCount, pageNum, pageObj, dom);
-            //_this.clickPageNum(pageObj.data, pageObj.chartConfig);
-        });
     },
     export: function (random, data) {
         $(".toolbar" + random + " .exportBnt").on('click', function () {

@@ -6,6 +6,7 @@ import com.google.common.hash.Hashing;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.cboard.cache.CacheManager;
+import org.cboard.dataprovider.DataProvider;
 import org.cboard.dataprovider.aggregator.InnerAggregator;
 import org.cboard.dataprovider.config.AggConfig;
 import org.cboard.dataprovider.config.CompositeConfig;
@@ -13,7 +14,6 @@ import org.cboard.dataprovider.config.ConfigComponent;
 import org.cboard.dataprovider.config.DimensionConfig;
 import org.cboard.dataprovider.result.AggregateResult;
 import org.cboard.dataprovider.result.ColumnIndex;
-import org.cboard.exception.CBoardException;
 import org.cboard.util.NaturalOrderComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.cboard.dataprovider.DataProvider.NULL_STRING;
-import static org.cboard.dataprovider.DataProvider.separateNull;
 
 /**
  * Created by yfyuan on 2017/1/18.
@@ -39,10 +38,26 @@ public class JvmAggregator extends InnerAggregator {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    @Qualifier("rawDataCache")
+    private CacheManager<String[][]> rawDataCache;
+
+    private String getCacheKey() {
+        return Hashing.md5().newHasher().putString(JSONObject.toJSON(dataSource).toString() + JSONObject.toJSON(query).toString(), Charsets.UTF_8).hash().toString();
+    }
+
+    public boolean checkExist() {
+        return rawDataCache.get(getCacheKey()) != null;
+    }
+
+    public void cleanExist() {
+        rawDataCache.remove(getCacheKey());
+    }
+
     public void loadData(String[][] data, long interval) {
         rawDataCache.put(getCacheKey(), data, interval * 1000);
     }
-
+    //从缓存中获取维度并且去重，这个做法很好，用的是1.8的新特性
     public String[] queryDimVals(String columnName, AggConfig config) throws Exception {
         String[][] data = rawDataCache.get(getCacheKey());
         Map<String, Integer> columnIndex = getColumnIndex(data);
@@ -67,11 +82,7 @@ public class JvmAggregator extends InnerAggregator {
     @Override
     public String[] getColumn() throws Exception {
         String[][] data = rawDataCache.get(getCacheKey());
-        try {
-            return data[0];
-        } catch (Exception e) {
-            throw new CBoardException("dataset is null");
-        }
+        return data[0];
     }
 
     @Override
@@ -89,9 +100,7 @@ public class JvmAggregator extends InnerAggregator {
 
         Map<Dimensions, Double[]> grouped = Arrays.stream(data).skip(1).filter(rowFilter::filter)
                 .collect(Collectors.groupingBy(row -> {
-                    String[] ds = dimensionList.stream().map(
-                            d -> row[d.getIndex()]
-                    ).toArray(String[]::new);
+                    String[] ds = dimensionList.stream().map(d -> row[d.getIndex()]).toArray(String[]::new);
                     return new Dimensions(ds);
                 }, AggregateCollector.getCollector(valuesList)));
 

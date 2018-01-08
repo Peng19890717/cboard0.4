@@ -7,28 +7,16 @@
         <property name="properties" ref="propertiesConfiguration" />
     </bean>
 
-    <!--咱们的BI配置-->
+    <!--SuperDiamond的配置信息-->
     <bean id="propertiesConfiguration" class="com.github.diamond.client.PropertiesConfigurationFactoryBean">
         <!--给构造函数赋值-->
         <constructor-arg index="0" value="192.168.2.165" />
         <constructor-arg index="1" value="8283" />           <!--服务器的端口号-->
-        <constructor-arg index="2" value="coocaa-bi-0.4" />    <!--项目编码-->
-        <constructor-arg index="3" value="development" />   <!--项目文件名（开发环境、测试环境、灰度环境、生产环境）-->
-        <!--<constructor-arg index="3" value="test" />-->
+        <constructor-arg index="2" value="coocaa-bi-0.3" />    <!--项目编码-->
+        <!--<constructor-arg index="3" value="development" />   &lt;!&ndash;项目文件名（开发环境、测试环境、灰度环境、生产环境）&ndash;&gt;-->
+        <constructor-arg index="3" value="test" />
         <!--<constructor-arg index="3" value="production" />    &lt;!&ndash;生产环境&ndash;&gt;-->
         <constructor-arg index="4" value="base" />           <!--模块名-->
     </bean>
-
-    <!--&lt;!&ndash;江苏广电BI配置（JSCNBI）&ndash;&gt;-->
-    <!--<bean id="propertiesConfiguration" class="com.github.diamond.client.PropertiesConfigurationFactoryBean">-->
-        <!--&lt;!&ndash;给构造函数赋值&ndash;&gt;-->
-        <!--<constructor-arg index="0" value="192.168.2.165" />-->
-        <!--<constructor-arg index="1" value="8283" />           &lt;!&ndash;服务器的端口号&ndash;&gt;-->
-        <!--<constructor-arg index="2" value="coocaa-bi-0.4-JSCNBI" />    &lt;!&ndash;项目编码&ndash;&gt;-->
-        <!--&lt;!&ndash;<constructor-arg index="3" value="development" />   &lt;!&ndash;项目文件名（开发环境、测试环境、灰度环境、生产环境）&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;<constructor-arg index="3" value="test" />&ndash;&gt;-->
-        <!--<constructor-arg index="3" value="production" />    &lt;!&ndash;生产环境&ndash;&gt;-->
-        <!--<constructor-arg index="4" value="base" />           &lt;!&ndash;模块名&ndash;&gt;-->
-    <!--</bean>-->
 
 </beans>
