@@ -100,8 +100,9 @@ public abstract class DataProvider {
                 .map(member -> {
                     return Objects.isNull(member) ? NULL_STRING : member;
                 })
-                .sorted(new NaturalOrderComparator()).limit(2000).toArray(String[]::new);
-//                .sorted(new NaturalOrderComparator()).limit(1000).toArray(String[]::new);//界面上显示更多的内容
+                .sorted(new NaturalOrderComparator()).toArray(String[]::new);//显示无限个
+//                .sorted(new NaturalOrderComparator()).limit(2000).toArray(String[]::new);//显示2000个查询条件
+//                .sorted(new NaturalOrderComparator()).limit(1000).toArray(String[]::new);//界面上显示更多的内容（这是最开始的）
     }
 
     public final String[] getColumn(boolean reload) throws Exception {
