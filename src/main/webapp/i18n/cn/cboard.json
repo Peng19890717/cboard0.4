@@ -75,11 +75,11 @@
     "RES_ADMIN": "资源管理",
     "JOB": "定时任务",
     "SHARE_RESOURCE": "资源分享",
-
     "EVENT_ANALYSIS":"事件分析",
     "CREATE_FUNNEL":"新建漏斗",
     "FUNNEL_ANALYSIS":"漏斗分析",
-    "PATH_ANALYSIS":"路径分析"
+    "PATH_ANALYSIS":"路径分析",
+    "MENU_SORT":"菜单排序"
   },
   "HEADER": {
     "SIGN_OUT": "注销",

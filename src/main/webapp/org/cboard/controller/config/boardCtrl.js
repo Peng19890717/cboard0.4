@@ -235,6 +235,61 @@ cBoard.controller('boardCtrl',
           delete widget.relations;
         }
     };
+    $scope.searchNode = function () {
+            var para = {wgtName: '', dsName: '', dsrName: ''};
+
+            //map widgetList to list (add datasetName and datasourceName)
+            var list = $scope.widgetList.map(function (w) {
+                var ds = _.find($scope.datasetList, function (obj) {
+                    return obj.id == w.data.datasetId
+                });
+                var dsrName = '';
+                var dsr;
+                if (ds) {
+                    dsr = _.find($scope.datasourceList, function (obj) {
+                        return obj.id == ds.data.datasource
+                    });
+                } else if (w.data.datasource) {
+                    dsr = _.find($scope.datasourceList, function (obj) {
+                        return obj.id == w.data.datasource
+                    });
+                }
+                return {
+                    "id": w.id,
+                    "name": w.name,
+                    "categoryName": w.categoryName,
+                    "datasetName": ds ? ds.name : '',
+                    "datasourceName": dsr ? dsr.name : dsrName
+                };
+            });
+
+            //split search keywords
+            if ($scope.keywords) {
+                if ($scope.keywords.indexOf(' ') == -1 && $scope.keywords.indexOf(':') == -1) {
+                    para.wgtName = $scope.keywords;
+                } else {
+                    var keys = $scope.keywords.split(' ');
+                    for (var i = 0; i < keys.length; i++) {
+                        var w = keys[i].trim();
+                        if (w.split(':')[0] == 'wg') {
+                            para["wgtName"] = w.split(':')[1];
+                        }
+                        if (w.split(':')[0] == 'ds') {
+                            para["dsName"] = w.split(':')[1];
+                        }
+                        if (w.split(':')[0] == 'dsr') {
+                            para["dsrName"] = w.split(':')[1];
+                        }
+                    }
+                }
+            }
+            //filter data by keywords
+            originalData = jstree_CvtVPath2TreeData(
+                $filter('filter')(list, {name: para.wgtName, datasetName: para.dsName, datasourceName: para.dsrName})
+            );
+
+            jstree_ReloadTree(treeID, originalData);
+        };
 
     var validate = function () {
         $scope.alerts = [];

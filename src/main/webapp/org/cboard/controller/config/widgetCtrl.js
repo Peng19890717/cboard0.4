@@ -1521,6 +1521,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $scope.deleteWgt(getSelectedWidget());
         };
         $scope.searchNode = function () {
+            debugger;
             var para = {wgtName: '', dsName: '', dsrName: ''};
 
             //map widgetList to list (add datasetName and datasourceName)

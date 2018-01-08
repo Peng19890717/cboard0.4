@@ -31,6 +31,7 @@ public class MenuService {
         menuList.add(new DashboardMenu(13, 1, "SIDEBAR.FUNNEL_ANALYSIS", "config.customFunnel"));
 
         menuList.add(new DashboardMenu(14, 1, "SIDEBAR.PATH_ANALYSIS", "config.path_analysis"));
+        menuList.add(new DashboardMenu(15, 1, "SIDEBAR.MENU_SORT", "config.menuSort"));
         //menuList.add(new DashboardMenu(13, 1, "SIDEBAR.CREATE_FUNNEL", "config.customFunnel"));
     }
 
