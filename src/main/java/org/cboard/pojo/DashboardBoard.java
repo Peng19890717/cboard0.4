@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  */
 public class DashboardBoard {
 
+    private Integer sort;
     private Long id;
     private String userId;
     private Long categoryId;
@@ -107,4 +108,13 @@ public class DashboardBoard {
     public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
 }

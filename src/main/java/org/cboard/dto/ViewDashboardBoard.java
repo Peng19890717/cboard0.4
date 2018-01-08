@@ -1,8 +1,8 @@
 package org.cboard.dto;
 
 import com.alibaba.fastjson.JSONObject;
-import org.cboard.pojo.DashboardBoard;
 import com.google.common.base.Function;
+import org.cboard.pojo.DashboardBoard;
 import org.cboard.services.role.RolePermission;
 
 import javax.annotation.Nullable;
@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public class ViewDashboardBoard {
 
+    private Integer sort;
     private Long id;
     private String userId;
     private Long categoryId;
@@ -35,6 +36,7 @@ public class ViewDashboardBoard {
     };
 
     public ViewDashboardBoard(DashboardBoard board) {
+        this.sort = board.getSort();
         this.id = board.getId();
         this.userId = board.getUserId();
         this.categoryId = board.getCategoryId();
@@ -143,5 +145,13 @@ public class ViewDashboardBoard {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }

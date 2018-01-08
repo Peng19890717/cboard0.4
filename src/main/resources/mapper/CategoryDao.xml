@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.cboard.dao.CategoryDao">
-
+    <!--获取一级菜单的内容-->
     <select id="getCategoryList" resultType="org.cboard.pojo.DashboardCategory">
-       SELECT category_id id,user_id userId,category_name name FROM dashboard_category
-       order by category_name
+        SELECT category_id id,user_id userId,category_name name,sort FROM dashboard_category
+        order by sort
+        <!--order by category_name-->
     </select>
 
     <insert id="save" parameterType="org.cboard.pojo.DashboardCategory">
         <![CDATA[
+
         INSERT INTO dashboard_category(user_id,category_name) VALUES (#{userId},#{name})
+
         ]]>
     </insert>
 
     <update id="update" parameterType="org.cboard.pojo.DashboardCategory">
         <![CDATA[
+
         UPDATE dashboard_category SET category_name = #{name} where category_id = #{id}
+
         ]]>
     </update>
 
     <select id="countExistCategoryName" resultType="java.lang.Long">
         SELECT count(1) from dashboard_category where 1=1
-        <if test="category_id != null" >
-        <![CDATA[
+        <if test="category_id != null">
+            <![CDATA[
             and category_id <> #{category_id}
             ]]>
         </if>
-          and category_name = #{category_name}
+        and category_name = #{category_name}
     </select>
 
     <delete id="delete">

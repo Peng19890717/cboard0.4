@@ -8,6 +8,7 @@ public class DashboardCategory {
     private Long id;
     private String userId;
     private String name;
+    private Integer sort;//一级标签排序
 
     public Long getId() {
         return id;
@@ -32,4 +33,13 @@ public class DashboardCategory {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
 }

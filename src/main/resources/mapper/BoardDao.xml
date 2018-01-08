@@ -19,6 +19,7 @@
 
     <select id="getBoardList" resultType="org.cboard.pojo.DashboardBoard">
           SELECT
+               a.sort          AS sort,
                board_id        AS id,
                a.user_id       AS userId,
                board_name      AS NAME,
@@ -37,7 +38,9 @@
                FROM dashboard_user_role ur
                LEFT JOIN dashboard_role_res rr ON ur.role_id = rr.role_id
               WHERE ur.user_id = #{0} AND rr.res_type = 'board'
-          ) ORDER BY a.board_name
+          )
+          <!--ORDER BY a.board_name-->
+          ORDER BY a.sort
     </select>
 
     <select id="getBoardListAdmin" resultType="org.cboard.pojo.DashboardBoard">
@@ -66,7 +69,8 @@
         ORDER BY a.board_name
     </select>
 
-    <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="board_id" parameterType="org.cboard.pojo.DashboardBoard">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="board_id"
+            parameterType="org.cboard.pojo.DashboardBoard">
         INSERT INTO dashboard_board(user_id,board_name,layout_json,category_id)
         VALUES (#{userId},#{name},#{layout},
         <choose>
@@ -96,7 +100,7 @@
 
     <select id="countExistBoardName" parameterType="Map" resultType="java.lang.Long">
         SELECT count(1) FROM dashboard_board WHERE user_id = #{user_id}
-        <if test="board_id != null" >
+        <if test="board_id != null">
             <![CDATA[
             AND board_id <> #{board_id}
             ]]>
@@ -110,17 +114,17 @@
 
     <select id="checkBoardRole" resultType="java.lang.Long">
         SELECT count(1)
-          FROM dashboard_board
-         WHERE board_id = #{1}
-               AND (#{0} = '${admin_user_id}'
-                 OR user_id = #{0}
-                 OR board_id IN (
-                    SELECT res_id
-                      FROM dashboard_user_role ur
-                      LEFT JOIN dashboard_role_res rr ON ur.role_id = rr.role_id
-                     <!--WHERE ur.user_id = #{0} AND rr.res_type = 'board' AND rr.permission LIKE #{2}-->
-                     )
-                 )
+        FROM dashboard_board
+        WHERE board_id = #{1}
+        AND (#{0} = '${admin_user_id}'
+        OR user_id = #{0}
+        OR board_id IN (
+        SELECT res_id
+        FROM dashboard_user_role ur
+        LEFT JOIN dashboard_role_res rr ON ur.role_id = rr.role_id
+        <!--WHERE ur.user_id = #{0} AND rr.res_type = 'board' AND rr.permission LIKE #{2}-->
+        )
+        )
     </select>
 
     <select id="getBoardParam" resultType="org.cboard.pojo.DashboardBoardParam">
@@ -130,7 +134,9 @@
 
     <insert id="saveBoardParam" parameterType="org.cboard.pojo.DashboardBoardParam">
         <![CDATA[
+
         INSERT INTO dashboard_board_param(user_id,board_id,config) VALUES (#{userId},#{boardId},#{config})
+
         ]]>
     </insert>
 
