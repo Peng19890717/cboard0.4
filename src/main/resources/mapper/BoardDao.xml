@@ -98,6 +98,15 @@
         WHERE board_id = #{id}
     </update>
 
+    <!--更新sort（排序）字段的值-->
+    <update id="updateSort" parameterType="org.cboard.pojo.DashboardBoard">
+        <![CDATA[
+
+        UPDATE dashboard_board SET sort = #{sort} where board_id = #{id}
+
+        ]]>
+    </update>
+
     <select id="countExistBoardName" parameterType="Map" resultType="java.lang.Long">
         SELECT count(1) FROM dashboard_board WHERE user_id = #{user_id}
         <if test="board_id != null">

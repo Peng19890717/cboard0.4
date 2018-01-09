@@ -23,6 +23,8 @@ public interface BoardDao {
 
     int update(DashboardBoard board);
 
+    int updateSort(DashboardBoard board);
+
     int delete(Long id, String userId);
 
     DashboardBoard getBoard(Long id);

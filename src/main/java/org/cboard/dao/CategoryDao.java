@@ -20,5 +20,10 @@ public interface CategoryDao {
 
     int update(DashboardCategory dashboardCategory);
 
+    //modified by wbc 2018-01-09 start 更新sort字段的值
+    int updateSort(DashboardCategory dashboardCategory);
+    //modified by wbc 2018-01-09 end 更新sort字段的值
+
+
     int delete(Long id);
 }
