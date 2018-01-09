@@ -40,7 +40,7 @@
               WHERE ur.user_id = #{0} AND rr.res_type = 'board'
           )
           <!--ORDER BY a.board_name-->
-          ORDER BY a.sort
+          ORDER BY a.category_id,a.sort
     </select>
 
     <select id="getBoardListAdmin" resultType="org.cboard.pojo.DashboardBoard">
