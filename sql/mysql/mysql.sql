@@ -111,3 +111,15 @@ ALTER  TABLE  dashboard_widget ADD update_time TIMESTAMP DEFAULT now();
 
 ALTER  TABLE  dashboard_board ADD create_time TIMESTAMP DEFAULT now();
 ALTER  TABLE  dashboard_board ADD update_time TIMESTAMP DEFAULT now();
+
+--    一二级菜单排序
+alter table dashboard_category add sort int(11) DEFAULT NULL COMMENT '一级标签分类顺序（从0开始）';
+
+alter table dashboard_board add sort int(11) DEFAULT NULL COMMENT '二级标签分类顺序（从0开始）';
+
+
+
+
+
+
+
