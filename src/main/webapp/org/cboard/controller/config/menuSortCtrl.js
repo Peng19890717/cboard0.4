@@ -20,7 +20,7 @@ cBoard.controller('menuSortCtrl', function ($scope, $http) {
              arr.push({id:id,sort:i});
          })
 
-         $http.post("dashboardmenu/updateCategory.do",{data: arr}).success(function (response) {
+         $http.post("dashboardmenu/updateCategory.do",{json:JSON.stringify({data:arr})}).success(function (response) {
              debugger;
          });
      }
@@ -31,7 +31,7 @@ cBoard.controller('menuSortCtrl', function ($scope, $http) {
             var id=$(v).attr("id");
             arr.push({id:id,sort:i});
         })
-        $http.post("dashboardmenu/updateBoard.do.do",{data:arr}).success(function (response) {
+        $http.post("dashboardmenu/updateBoard.do",{json:JSON.stringify({data:arr})}).success(function (response) {
            debugger;
         });
     }
