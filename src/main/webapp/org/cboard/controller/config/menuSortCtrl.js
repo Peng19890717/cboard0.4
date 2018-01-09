@@ -17,15 +17,22 @@ cBoard.controller('menuSortCtrl', function ($scope, $http) {
          var arr=[];
          $("#sortable li").each(function (i,v) {
              var id=$(v).attr("id");
-             arr.push({id:id,sort:index+1});
+             arr.push({id:id,sort:i});
          })
+
+         $http.post("dashboardmenu/updateCategory.do",{data: arr}).success(function (response) {
+             debugger;
+         });
      }
 
     $scope.saveSecondMenu=function () {
         var arr=[];
         $("#sortable1 li").each(function (i,v) {
             var id=$(v).attr("id");
-            arr.push({id:id,sort:index+1});
+            arr.push({id:id,sort:i});
         })
+        $http.post("dashboardmenu/updateBoard.do.do",{data:arr}).success(function (response) {
+           debugger;
+        });
     }
 });
