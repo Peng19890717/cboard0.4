@@ -27,12 +27,6 @@
     </repositories>
 
     <dependencies>
-        <!--统一配置管理服务SuperDiamond-->
-        <dependency>
-            <groupId>com.github.diamond</groupId>
-            <artifactId>super-diamond-client</artifactId>
-            <version>1.1.0</version>
-        </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -361,6 +355,19 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <version>2.4.0</version>
+        </dependency>
+
+        <!--统一配置管理服务SuperDiamond-->
+        <dependency>
+            <groupId>com.github.diamond</groupId>
+            <artifactId>super-diamond-client</artifactId>
+            <version>1.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
