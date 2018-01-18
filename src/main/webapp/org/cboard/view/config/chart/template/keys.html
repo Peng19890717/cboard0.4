@@ -22,7 +22,8 @@
                 {{o.level?'['+o.level+'].':''}}{{o.alias?o.alias:o.col}}
             </button>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle"
-                    ng-click="editSort(o);cleanVSort();">
+                    ng-click="editSort(o);">
+                <!--ng-click="editSort(o);cleanVSort();">-->
                 <span class="fa" ng-class="{undefined:'fa-sort','asc':'fa-sort-asc','desc':'fa-sort-desc'}[o.sort]"></span>
             </button>
             <button ng-if="curWidget.config.chart_type=='table'" type="button" class="btn btn-default btn-sm dropdown-toggle"

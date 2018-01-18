@@ -45,7 +45,7 @@ cBoard.controller('boardCtrl',
     };
 
     var getDatasetList = function () {
-        $http.get("dashboard/getDatasetList.do")
+        $http.get("dashboard/getDatasetList.do?page=config/boardCtrl.js")
             .then(function (response) {
                 $scope.datasetList = response.data;
                 return $http.get("dashboard/getWidgetList.do");

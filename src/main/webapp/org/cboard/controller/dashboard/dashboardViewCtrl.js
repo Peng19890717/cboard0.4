@@ -1,14 +1,15 @@
 /**
  * Created by yfyuan on 2016/8/2.
  */
-
+// var datasetList="";//add by wanghaihua
 cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $state, $stateParams, $http, ModalUtils, chartService, $interval, $uibModal, dataService) {
 
     $scope.loading = true;
     $scope.paramInit = 0;
     $scope.relations = JSON.stringify([]);
-    $http.get("dashboard/getDatasetList.do").success(function (response) {
+    $http.get("dashboard/getDatasetList.do?page=cboard/controller/dashboard/dashboardViewCtrl.js").success(function (response) {
         $scope.datasetList = response;
+        datasetList=response;
         $scope.realtimeDataset = {};
         $scope.datasetMeta = {};
         $scope.intervals = [];
@@ -473,14 +474,17 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
             widget.show = true;
         });
     };
-
-    $http.get("dashboard/getBoardParam.do?boardId=" + $stateParams.id).success(function (response) {
-        if (response) {
-            $scope.boardParams = JSON.parse(response.config);
-        } else {
-            $scope.boardParams = [];
-        }
-    });
+    /**
+     * 王海花屏蔽这个接口，没有返回任何东西
+     * @param name
+     */
+    // $http.get("dashboard/getBoardParam.do?boardId=" + $stateParams.id).success(function (response) {
+    //     if (response) {
+    //         $scope.boardParams = JSON.parse(response.config);
+    //     } else {
+    //         $scope.boardParams = [];
+    //     }
+    // });
 
     $scope.newBoardParam = function (name) {
         if (name == '') {

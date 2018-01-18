@@ -274,7 +274,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
 
 
         var loadDataset = function (callback) {
-            $http.get("dashboard/getDatasetList.do").success(function (response) {
+            $http.get("dashboard/getDatasetList.do?page=controller/config/widgetCtrl.js").success(function (response) {
                 $scope.datasetList = response;
                 if (callback) {
                     callback();
@@ -629,6 +629,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $scope.curWidget.config.filters = oldConfig.filters;
             switch ($scope.curWidget.config.chart_type) {
                 case 'line':
+                    debugger;
                     $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
                         _.each(v.cols, function (c) {
@@ -1439,11 +1440,11 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.cleanVSort = function () {
-            _.each($scope.curWidget.config.values, function (v) {
-                _.each(v.cols, function (c) {
-                    c.sort = undefined;
-                });
-            });
+            // _.each($scope.curWidget.config.values, function (v) {
+            //     _.each(v.cols, function (c) {
+            //         c.sort = undefined;
+            //     });
+            // });
         };
 
         $scope.editAlign = function (o) {
@@ -1461,12 +1462,12 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         };
 
         $scope.cleanRowSort = function (o) {
-            var sort = o.sort;
-            _.each($scope.curWidget.config.keys, function (k) {
-                k.sort = undefined;
-            });
-            $scope.cleanVSort();
-            o.sort = sort;
+            // var sort = o.sort;
+            // _.each($scope.curWidget.config.keys, function (k) {
+            //     k.sort = undefined;
+            // });
+            // $scope.cleanVSort();
+            // o.sort = sort;
         };
 
         /** js tree related start... **/
@@ -1521,7 +1522,6 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             $scope.deleteWgt(getSelectedWidget());
         };
         $scope.searchNode = function () {
-            debugger;
             var para = {wgtName: '', dsName: '', dsrName: ''};
 
             //map widgetList to list (add datasetName and datasourceName)

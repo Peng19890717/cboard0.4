@@ -27,10 +27,10 @@
                                     <div class="row">
                                         <!--<div ng-repeat="param in row.params | filter:{paramType:'selector'}:true" ng-controller="paramCtrl" ng-init="init()">-->
                                         <div ng-repeat="param in row.params | filter:{paramType:'selector'}:true" ng-controller="paramCtrl" ng-init="init()">
-                                            <div ng-if="param.name.indexOf('日期')>=0||param.name.indexOf('时间')>=0">
+                                            <div ng-if="param.name.indexOf('日期')>=0">
                                                 <ng-include src="'org/cboard/view/dashboard/param/selectorDate.html'" style="float: left"/>
                                             </div>
-                                            <div ng-if="param.name.indexOf('日期')<0&&param.name.indexOf('时间')<0">
+                                            <div ng-if="param.name.indexOf('日期')<0">
                                                 <ng-include src="'org/cboard/view/dashboard/param/selector.html'" style="float: left"/>
                                             </div>
                                         </div>

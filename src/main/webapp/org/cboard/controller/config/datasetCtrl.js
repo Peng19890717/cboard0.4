@@ -44,13 +44,12 @@ cBoard.controller('datasetCtrl', function ($scope, $http, $state, $stateParams, 
             }
         }
     };
-
     $http.get("dashboard/getDatasourceList.do").success(function (response) {
         $scope.datasourceList = response;
     });
 
     var getDatasetList = function () {
-        $http.get("dashboard/getDatasetList.do").success(function (response) {
+        $http.get("dashboard/getDatasetList.do?page=controller/config/datasetCtrl.js").success(function (response) {
             $scope.datasetList = response;
             $scope.searchNode();
             if ($stateParams.id) {

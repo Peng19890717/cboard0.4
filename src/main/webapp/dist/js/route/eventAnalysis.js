@@ -136,7 +136,6 @@ function getLineChart(id){
 // })();
 $(function(){
     $("input[type='text']","#search_condition").keyup(function(){
-        debugger;
         var obj=this;
        $("li","#search_condition").hide();
        $("li","#search_condition").filter(function(index){

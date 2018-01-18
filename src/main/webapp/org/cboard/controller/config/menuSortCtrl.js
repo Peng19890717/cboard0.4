@@ -21,7 +21,11 @@ cBoard.controller('menuSortCtrl', function ($scope, $http) {
          })
 
          $http.post("dashboardmenu/updateCategory.do",{json:JSON.stringify({data:arr})}).success(function (response) {
-             debugger;
+            if(response.msg=="success"){
+                alert("排序成功！")
+            }else{
+                alert("排序失败！")
+            }
          });
      }
 
@@ -32,7 +36,11 @@ cBoard.controller('menuSortCtrl', function ($scope, $http) {
             arr.push({id:id,sort:i});
         })
         $http.post("dashboardmenu/updateBoard.do",{json:JSON.stringify({data:arr})}).success(function (response) {
-           debugger;
+            if(response.msg=="success"){
+                alert("排序成功！")
+            }else{
+                alert("排序失败！")
+            }
         });
     }
 });

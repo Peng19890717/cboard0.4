@@ -112,7 +112,7 @@ cBoard.controller('userAdminCtrl', function ($scope, $http, ModalUtils, $filter)
     };
 
     var getDatasetList = function () {
-        return $http.get("admin/getDatasetList.do").success(function (response) {
+        return $http.get("admin/getDatasetList.do?page=controller/admin/userAdminCtrl.js").success(function (response) {
             _.each(buildNodeByCategory(response, 'Dataset', 'dataset', 'fa fa-table'), function (e) {
                 $scope.tree.dataset.resList.push(e);
             });

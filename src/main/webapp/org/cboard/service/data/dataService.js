@@ -3,14 +3,14 @@
  */
 'use strict';
 cBoard.service('dataService', function ($http, $q, updateService) {
-
-    var datasetList;
+    //var datasetList;
     var getDatasetList = function () {
         var deferred = $q.defer();
-        if (datasetList) {
+        if (typeof(datasetList)!="undefined"&&datasetList!='') {
             deferred.resolve(angular.copy(datasetList));
+            //console.log("datasetList="+datasetList);
         } else {
-            $http.get("dashboard/getDatasetList.do").success(function (data) {
+            $http.get("dashboard/getDatasetList.do?page=cboard/service/data/dataService.js").success(function (data) {
                 deferred.resolve(data);
             });
         }
@@ -20,7 +20,6 @@ cBoard.service('dataService', function ($http, $q, updateService) {
     this.linkDataset = function (datasetId, chartConfig) {
         return linkDataset(datasetId, chartConfig);
     };
-
     var linkDataset = function (datasetId, chartConfig) {
         if (_.isUndefined(datasetId) || _.isUndefined(chartConfig)) {
             var deferred = $q.defer();
@@ -165,6 +164,11 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             cfg.values = _.map(dataSeries, function (s) {
                 return {column: s.name, aggType: s.aggregate};
             });
+            if(cfg.filters.length>0){
+                if(cfg.filters[0].columnName=="日期"){
+                    cfg.rows[0].values=cfg.filters[0].values;
+                }
+            }
             $http.post("dashboard/getAggregateData.do", {
                 datasourceId: datasource,
                 query: angular.toJson(query),
@@ -172,16 +176,24 @@ cBoard.service('dataService', function ($http, $q, updateService) {
                 cfg: angular.toJson(cfg),
                 reload: reload
             }).success(function (data) {
-                var result = castRawData2Series(data, chartConfig);
-                result.chartConfig = chartConfig;
-                if (!_.isUndefined(datasetId)) {
-                    getDrillConfig(datasetId, chartConfig).then(function (c) {
+                /**
+                 * modify by wanghaihua
+                 * @type {string}
+                 */
+                var result='';
+                if(chartConfig.groups.length==0){
+                    result=castRawData2Series2(data,chartConfig);
+                }else
+                    result = castRawData2Series(data, chartConfig);
+                    result.chartConfig = chartConfig;
+                    if (!_.isUndefined(datasetId)) {
+                        getDrillConfig(datasetId, chartConfig).then(function (c) {
                         result.drill = {config: c};
                         callback(result);
                     });
-                } else {
-                    callback(result);
-                }
+                    } else {
+                      callback(result);
+                    };
             });
         });
     };
@@ -568,7 +580,6 @@ cBoard.service('dataService', function ($http, $q, updateService) {
                 });
             });
         });
-
         if (!_.isUndefined(valueSort)) {
             valueSortArr.sort(function (a, b) {
                 if (a.v == b.v)return 0;
@@ -605,6 +616,9 @@ cBoard.service('dataService', function ($http, $q, updateService) {
                         valueAxisIndex: vIdx,
                         formatter: series.formatter
                     };
+                    if(vIdx==1){
+                        debugger;
+                    }
                     castSeriesData(series, group.join('-'), castedKeys, newData, function (castedData, keyIdx) {
                         if (!aliasData[castedAliasSeriesName.length - 1]) {
                             aliasData[castedAliasSeriesName.length - 1] = new Array();
@@ -652,10 +666,175 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             seriesConfig: aliasSeriesConfig
         };
     };
+    /**
+     * 无group时多维数组排序
+     * @param data
+     * @param chartConfig
+     */
+    var castRawData2Series2=function (aggData,chartConfig) {
+        var castedKeys=[];
+        var castedAliasSeriesName=[];
 
+        var aliasSeriesConfig={};
+        var tempDataArray=[];//缓存当前数据
+        var orderArr=[];
+        var currentData = [];//排序后的数据
+        /**
+         * 获取 参数col在aggData.columnList中的下标
+         * @param col
+         */
+        var getIndex=function (col) {
+            var index=0;
+            for(var i=0;i<aggData.columnList.length;i++){
+                if(aggData.columnList[i].name==col){
+                    index=i;
+                    break;
+                }
+            }
+            return index;
+        }
+        var isNumber=function (str) {
+            var n = Number(str);
+            var flag=false;
+            if (!isNaN(n))
+            {
+                flag=true
+            }
+            return flag;
+        }
+        function arrfind(arr,ele) {
+            var flag=false;
+            for(var i=0;i<arr.length;i++){
+                if(ele==arr[i].colName){
+                    flag=true;
+                    break;
+                }
+            }
+            return flag;
+        }
+        function arrfind1(arr,ele) {
+            var flag=false;
+            for(var i=0;i<arr.length;i++){
+                if(ele[0]==arr[i][0]){
+                    flag=true;
+                    break;
+                }
+            }
+            return flag;
+        }
+        _.each(aggData.data,function (value,index) {
+            var o={};//一条数据
+            _.each(chartConfig.keys,function (v,i) {
+                o[v.col]=isNumber(value[i])?parseInt(value[i]):value[i];
+                if(v.sort!="undefined"&&!arrfind(orderArr,v.col))
+                {
+                    orderArr.push({"colName":v.col,"orderDir":v.sort});
+                }
+            });
+            _.each(chartConfig.values, function (v, vIdx) {
+                _.each(v.cols, function (series) {
+                    var seriesName = series.alias ? series.alias : series.col;
+                    if(!arrfind1(castedAliasSeriesName,[seriesName]))
+                    castedAliasSeriesName.push([seriesName]);
+                    if(typeof(series.exp)!="undefined"){
+                        var exp=getExpSeries(series.exp);
+                        var oldSeriesExp=series.exp;
+                        _.each(exp,function (n,j) {
+                            series.exp=series.exp.replace(n.aggregate+"("+n.name+")",value[getIndex(n.name)])
+                        })
+                        o[seriesName]=Math.round(eval(series.exp)*10000)/10000;
+                        series.exp=oldSeriesExp;
+                    }else{
+                        o[seriesName]=isNumber(value[getIndex(series.col)])?parseInt(value[getIndex(series.col)]):value[getIndex(series.col)];
+                    }
+                    if(typeof(series.sort)!="undefined"&&!arrfind(orderArr,series.col))
+                    {
+                        orderArr.push({"colName":series.col,"orderDir":series.sort});
+                    }
+                    aliasSeriesConfig[seriesName] = {
+                        type: v.series_type,
+                        valueAxisIndex: vIdx,
+                        formatter: series.formatter
+                    };
+                });
+            });
+            tempDataArray.push(o);
+        })
+        var sortData = _generateByStr(orderArr);
+        currentData = tempDataArray.concat();
+        currentData.sort(eval(sortData));
+        var aliasData=new Array(castedAliasSeriesName.length);
+        for(var i=0;i<castedAliasSeriesName.length;i++){
+            aliasData[i]=new Array();
+        }
+        _.each(currentData,function (value,index) {
+            var arr=[];//key数据
+            _.each(chartConfig.keys,function (v,i) {
+                arr.push(value[v.col])
+            });
+            castedKeys.push(arr);
+            for(var i=0;i<castedAliasSeriesName.length;i++){
+                aliasData[i].push(value[castedAliasSeriesName[i][0]]);
+            }
+        })
+
+
+        // 生成多列排序字符串方法
+        function _generateByStr(tempDataArray) {
+            var arr = tempDataArray.concat();
+            if (arr == null || arr.length == 0) {
+                return "";
+            } else {
+                if (arr.length > 1) {
+                    var a = arr[0];
+                    arr.shift();
+                    return "_sortBy('" + a.colName + "','" + a.orderDir + "',"
+                        + _generateByStr(arr) + ")";
+                } else {
+                    return "_sortBy('" + arr[0].colName + "','"
+                        + arr[0].orderDir + "')";
+                }
+            }
+        }
+        // 排序主方法
+        function _sortBy(name, dir, minor) {
+            return function(o, p) {
+                var a, b;
+                if (o && p && typeof o === 'object' && typeof p === 'object') {
+                    a = o[name];
+                    b = p[name];
+                    if (a === b) {
+                        return typeof minor === 'function' ? minor(o, p) : 0;
+                    }
+                    if (typeof a === typeof b) {
+                        if (dir == "asc") {
+                            return a < b ? -1 : 1;
+                        } else {
+                            return a > b ? -1 : 1;
+                        }
+                    }
+                    if (dir == "desc") {
+                        return typeof a < typeof b ? -1 : 1;
+                    } else {
+                        return typeof a > typeof b ? -1 : 1;
+                    }
+                } else {
+                    throw("error");
+                }
+            }
+        }
+        return{
+            keys:castedKeys,
+            series:castedAliasSeriesName,
+            data:aliasData,
+            seriesConfig:aliasSeriesConfig
+        }
+
+    }
     var castSeriesData = function (series, group, castedKeys, newData, iterator) {
         switch (series.type) {
             case 'exp':
+               // debugger;
                 var runExp = compileExp(series.exp);
                 for (var i = 0; i < castedKeys.length; i++) {
                     iterator(runExp(newData[group], castedKeys[i].join('-')), i);
@@ -669,7 +848,7 @@ cBoard.service('dataService', function ($http, $q, updateService) {
         }
     };
 
-    var compileExp = function (exp) {
+    function compileExp(exp) {
         var parseredExp = parserExp(exp);
         return function (groupData, key) {
             var _names = parseredExp.names;
