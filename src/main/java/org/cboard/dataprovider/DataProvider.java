@@ -66,7 +66,7 @@ public abstract class DataProvider {
      */
     public final AggregateResult getAggData(AggConfig ac, boolean reload) throws Exception {
         evalValueExpression(ac);
-        setAggConfig(ac);
+        setAggConfig(ac);//add by jeffrey on 2018-01-18
         if (isDataSourceAggInstance()) {
             return ((Aggregatable) this).queryAggData(ac);
         } else {
