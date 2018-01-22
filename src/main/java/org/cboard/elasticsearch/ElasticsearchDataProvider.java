@@ -119,6 +119,11 @@ public class ElasticsearchDataProvider extends DataProvider implements Aggregata
     }
 
     @Override
+    public void setAggConfig(AggConfig ac) {
+
+    }
+
+    @Override
     public String[] queryDimVals(String columnName, AggConfig config) throws Exception {
         JSONObject request = new JSONObject();
         request.put("size", 1000);

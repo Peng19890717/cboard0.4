@@ -57,6 +57,8 @@ public abstract class DataProvider {
         }
     }
 
+    public abstract void setAggConfig(AggConfig ac);
+
     /**
      * get the aggregated data by user's widget designer
      *
@@ -64,6 +66,7 @@ public abstract class DataProvider {
      */
     public final AggregateResult getAggData(AggConfig ac, boolean reload) throws Exception {
         evalValueExpression(ac);
+        setAggConfig(ac);
         if (isDataSourceAggInstance()) {
             return ((Aggregatable) this).queryAggData(ac);
         } else {

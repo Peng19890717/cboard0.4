@@ -267,6 +267,11 @@ public class SolrDataProvider extends DataProvider implements Aggregatable, Init
     }
 
     @Override
+    public void setAggConfig(AggConfig ac) {
+
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
 
     }

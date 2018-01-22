@@ -3,6 +3,7 @@ package org.cboard.dataproviderexample;
 import org.cboard.dataprovider.DataProvider;
 import org.cboard.dataprovider.annotation.DatasourceParameter;
 import org.cboard.dataprovider.annotation.QueryParameter;
+import org.cboard.dataprovider.config.AggConfig;
 
 import java.util.Map;
 
@@ -25,6 +26,11 @@ public class MyDataProvider extends DataProvider {
     @Override
     public boolean doAggregationInDataSource() {
         return false;
+    }
+
+    @Override
+    public void setAggConfig(AggConfig ac) {
+
     }
 
     @Override
