@@ -224,7 +224,6 @@ cBoard.controller('paramCtrl', function ($scope, $uibModal, $http) {
         },
         eventHandlers:{
             'apply.daterangepicker':function (ev,picker) {
-                debugger;
                 var timeArr=$("input.date-picker[flag='"+$scope.param.$$hashKey+"']").eq(0).val().split(" - ");
                 if($scope.param.selects[0].indexOf("-")>=0)
                     $scope.param.values =timeArr;
