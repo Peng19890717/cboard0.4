@@ -8,6 +8,7 @@ import org.cboard.dataprovider.annotation.ProviderName;
 import org.cboard.dataprovider.annotation.QueryParameter;
 import com.google.common.base.Joiner;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.cboard.dataprovider.config.AggConfig;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -38,6 +39,11 @@ public class SaikuDataProvider extends DataProvider {
     @Override
     public boolean doAggregationInDataSource() {
         return false;
+    }
+
+    @Override
+    public void setAggConfig(AggConfig ac) {
+
     }
 
     @Override

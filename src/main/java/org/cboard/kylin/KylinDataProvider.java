@@ -88,6 +88,11 @@ public class KylinDataProvider extends DataProvider implements Aggregatable, Ini
     }
 
     @Override
+    public void setAggConfig(AggConfig ac) {
+
+    }
+
+    @Override
     public String[][] getData() throws Exception {
         return null;
     }

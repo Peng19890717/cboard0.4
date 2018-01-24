@@ -17,10 +17,13 @@ import org.cboard.dataprovider.annotation.DatasourceParameter;
 import org.cboard.dataprovider.annotation.ProviderName;
 import org.cboard.dataprovider.annotation.QueryParameter;
 import org.cboard.dataprovider.config.AggConfig;
+import org.cboard.dataprovider.config.ConfigComponent;
+import org.cboard.dataprovider.config.DimensionConfig;
 import org.cboard.dataprovider.result.AggregateResult;
 import org.cboard.dataprovider.util.DPCommonUtils;
 import org.cboard.dataprovider.util.SqlHelper;
 import org.cboard.exception.CBoardException;
+import org.cboard.util.Constans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +32,9 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Created by yfyuan on 2016/8/17.
@@ -133,6 +139,7 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         return v != null && "true".equals(v);
     }
 
+    @Override
     public String[][] getData(Map<String, String> dataSource, Map<String, String> query) throws Exception {
         //获取jdbc连接
         Connection con = getConnection(dataSource);
@@ -185,6 +192,42 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         return list.toArray(new String[][]{});
     }
 
+    private AggConfig ac;
+
+    @Override
+    public void setAggConfig(AggConfig ac) {
+        this.ac=ac;
+    }
+
+    private Matcher getMatcher(String pattern, String sql) {
+        //{day_n} = n天前
+        //String pattern = "\\{day_\\d+}";
+        // 创建 Pattern 对象
+        Pattern r = Pattern.compile(pattern);
+        // 现在创建 matcher 对象
+        Matcher m = r.matcher(sql);
+        return m;
+    }
+
+    private String getSQLMatcher(String sql){
+        Matcher m = getMatcher("\\{day_\\d+}",sql);
+        boolean flag=m.find();
+        LOG.info("m.find(): " + flag);
+        if(flag){
+            String value=m.group();
+            LOG.info("value: " + value);
+            // 现在创建 matcher 对象
+            Matcher m_n = getMatcher("\\d+",value);
+            if(m_n.find()){
+                String value_n=m_n.group();//数字
+                sql=sql.replace(value,Constans.SQL_GTEQ.concat(Constans.SQL_DAY.replace("{day_num}",value_n)));
+                //LOG.info("SQL End String: " + sql);
+            }
+        }
+        return sql;
+    }
+
+
     @Override
     public String[][] getData() throws Exception {
         final int batchSize = 100000;
@@ -192,7 +235,25 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         LOG.debug("Execute JdbcDataProvider.getData() Start!");
         String sql = getAsSubQuery(query.get(SQL));
         List<String[]> list = null;
-        LOG.info("SQL String: " + sql);
+        LOG.info("Start SQL String: " + sql);
+        //LOG.info("ac String: " + ac);
+
+        if(ac!=null){ //日期进行解析
+            String betweenStr = sqlHelper.filterSqlV2(ac.getFilters().stream(), "BETWEEN");
+            LOG.info("ac String: " + betweenStr);
+            boolean flagBetween = "".equals(betweenStr);
+            if(!flagBetween){ //如果存在日期条件
+                Matcher m=getMatcher("\\{day_\\d+}",sql);
+                if(m.find()){
+                    sql=sql.replace(m.group(),betweenStr);
+                }
+            }else {
+                sql=getSQLMatcher(sql);
+            }
+        }else {//如果第一次进入没有查询条件的话，就必须要替换sql中的通配符
+            sql=getSQLMatcher(sql);
+        }
+        LOG.info("End SQL String: " + sql);
 
         try (Connection con = getConnection();
              Statement ps = con.createStatement();
@@ -246,6 +307,7 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         LOG.info("getData() using time: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         return null;
     }
+
 
     @Override
     public void test() throws Exception {
@@ -355,7 +417,7 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         try {
             stat.setMaxRows(100);
             String fsql = "\nSELECT * FROM (\n%s\n) cb_view WHERE 1=0";
-            String sql = String.format(fsql, subQuerySql);
+            String sql = String.format(fsql, getSQLMatcher(subQuerySql));
             LOG.info(sql);
             ResultSet rs = stat.executeQuery(sql);
             metaData = rs.getMetaData();

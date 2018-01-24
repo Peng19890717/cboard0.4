@@ -2,7 +2,10 @@ package org.cboard.dataprovider.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.cboard.dataprovider.config.*;
+import org.cboard.util.Constans;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -75,7 +78,7 @@ public class SqlHelper {
         return exec;
     }
 
-    private String filterSql(Stream<ConfigComponent> filterStream, String prefix) {
+    public String filterSql(Stream<ConfigComponent> filterStream, String prefix) {
         StringJoiner where = new StringJoiner("\nAND ", prefix + " ", "");
         where.setEmptyValue("");
         filterStream.map(e -> separateNull(e))
@@ -98,6 +101,48 @@ public class SqlHelper {
         }
         return null;
     }
+    /**start by jeffrey on 2018-01-22====================================================================*/
+    /**单独过滤配置面板中日期通配符： {day_n} 在默认情况与有参数情况下,注：数据结果都是大于等于n天前
+     * 1、当默认情况下根据n通配n天前的数据，如{day_7}结果： >=date_sub(curdate(), interval 7 day)
+     * 2、当存在日期查询条件那就将{day_n}通配成指定日期范围数据，如[20180101,20180107]结果：BETWEEN '2018-01-01' AND '2018-01-07'
+     */
+    public String filterSqlV2(Stream<ConfigComponent> filterStream, String prefix) {
+        StringJoiner where = new StringJoiner("", prefix + " ", "");
+        where.setEmptyValue("");
+        filterStream.map(e->filterData(e, Constans.DAY_CN))
+                .map(e->configComponentToSqlV2(e))
+                .filter(e -> e != null)
+                .forEach(where::add);
+        return where.toString();
+    }
+    /**过滤出查询条件中日期查询条件*/
+    private static DimensionConfig filterData(ConfigComponent configComponent,String param) {
+        if (configComponent instanceof DimensionConfig) {
+            DimensionConfig cc = (DimensionConfig) configComponent;
+            if(cc.getColumnName().equals(param)){
+                return cc;
+            }return null;
+        }
+        return null;
+    }
+    /**生成 以下格式数据：'2018-01-01' AND '2018-01-07'*/
+    private String configComponentToSqlV2(ConfigComponent cc) {
+        try {
+            if (cc instanceof DimensionConfig) {
+                DimensionConfig config= (DimensionConfig) cc;
+                String v0 = config.getValues().get(0);
+                String v1 = null;
+                if (config.getValues().size() == 2) {
+                    v1 = config.getValues().get(1);
+                }
+                return "'"+new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyyMMdd").parse(v0))+"' AND '"+new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyyMMdd").parse(v1))+"'";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    /** end by jeffrey on 2018-01-22====================================================================*/
 
     /**
      * Parser a single filter configuration to sql syntax

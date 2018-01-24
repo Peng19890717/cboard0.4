@@ -8,6 +8,7 @@ import org.cboard.dataprovider.DataProvider;
 import org.cboard.dataprovider.annotation.DatasourceParameter;
 import org.cboard.dataprovider.annotation.ProviderName;
 import org.cboard.dataprovider.annotation.QueryParameter;
+import org.cboard.dataprovider.config.AggConfig;
 import org.cboard.exception.CBoardException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,11 @@ public class FileDataProvider extends DataProvider {
     @Override
     public boolean doAggregationInDataSource() {
         return false;
+    }
+
+    @Override
+    public void setAggConfig(AggConfig ac) {
+
     }
 
     @Override
