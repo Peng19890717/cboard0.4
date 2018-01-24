@@ -164,11 +164,11 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             cfg.values = _.map(dataSeries, function (s) {
                 return {column: s.name, aggType: s.aggregate};
             });
-            if(cfg.filters.length>0){
-                if(cfg.filters[0].columnName=="日期"){
-                    cfg.rows[0].values=cfg.filters[0].values;
-                }
-            }
+            // if(cfg.filters.length>0){
+            //     if(cfg.filters[0].columnName=="日期"){
+            //         cfg.rows[0].values=[];
+            //     }
+            // }
             $http.post("dashboard/getAggregateData.do", {
                 datasourceId: datasource,
                 query: angular.toJson(query),
