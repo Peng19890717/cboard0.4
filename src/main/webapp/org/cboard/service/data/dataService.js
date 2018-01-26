@@ -745,11 +745,11 @@ cBoard.service('dataService', function ($http, $q, updateService) {
                         o[seriesName]=Math.round(eval(series.exp)*10000)/10000;
                         series.exp=oldSeriesExp;
                     }else{
-                        o[seriesName]=isNumber(value[getIndex(series.col)])?parseInt(value[getIndex(series.col)]):value[getIndex(series.col)];
+                        o[seriesName]=isNumber(value[getIndex(seriesName)])?parseInt(value[getIndex(seriesName)]):value[getIndex(seriesName)];
                     }
-                    if(typeof(series.sort)!="undefined"&&!arrfind(orderArr,series.col))
+                    if(typeof(series.sort)!="undefined"&&!arrfind(orderArr,seriesName))
                     {
-                        orderArr.push({"colName":series.col,"orderDir":series.sort});
+                        orderArr.push({"colName":seriesName,"orderDir":series.sort});
                     }
                     aliasSeriesConfig[seriesName] = {
                         type: v.series_type,
