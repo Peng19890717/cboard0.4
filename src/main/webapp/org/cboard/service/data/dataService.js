@@ -726,7 +726,7 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             var o={};//一条数据
             _.each(chartConfig.keys,function (v,i) {
                 o[v.col]=isNumber(value[i])?parseInt(value[i]):value[i];
-                if(v.sort!="undefined"&&!arrfind(orderArr,v.col))
+                if(v.sort!=undefined&&!arrfind(orderArr,v.col))
                 {
                     orderArr.push({"colName":v.col,"orderDir":v.sort});
                 }
