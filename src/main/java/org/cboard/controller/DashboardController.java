@@ -370,6 +370,10 @@ public class DashboardController extends BaseController {
 
     @RequestMapping(value = "/tableToxls")
     public ResponseEntity<byte[]> tableToxls(@RequestParam(name = "data") String data) {
+        //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
+        data = data.replace("column_key", "data");
+//        data = data.replace("\"rowSpan\":\"row_null\",","");//这一行不需要
+        //modified by wbc start 2017-07-14 end
         HSSFWorkbook wb = xlsProcessService.tableToxls(JSONObject.parseObject(data));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
