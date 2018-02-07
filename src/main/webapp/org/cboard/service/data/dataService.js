@@ -166,6 +166,7 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             });
             if(cfg.filters.length>0){
                 if(cfg.filters[0].columnName=="日期"){
+                    if(cfg.rows.length>0)
                     cfg.rows[0].values=[];
                 }
             }
@@ -674,7 +675,6 @@ cBoard.service('dataService', function ($http, $q, updateService) {
     var castRawData2Series2=function (aggData,chartConfig) {
         var castedKeys=[];
         var castedAliasSeriesName=[];
-
         var aliasSeriesConfig={};
         var tempDataArray=[];//缓存当前数据
         var orderArr=[];
@@ -726,6 +726,16 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             var o={};//一条数据
             _.each(chartConfig.keys,function (v,i) {
                 o[v.col]=isNumber(value[i])?parseInt(value[i]):value[i];
+                if(isNumber(value[i])){
+                    if(value[i].indexOf("E")>-1){
+                        var seriesName_value=value[i].split("E");
+                        o[v.col]=Math.floor(seriesName_value[0]*Math.pow(10,seriesName_value[1]));
+                    }else{
+                        o[v.col]=parseInt(value[i]);
+                    }
+                }else{
+                    o[v.col]=value[i];
+                }
                 if(v.sort!=undefined&&!arrfind(orderArr,v.col))
                 {
                     orderArr.push({"colName":v.col,"orderDir":v.sort});
@@ -733,7 +743,7 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             });
             _.each(chartConfig.values, function (v, vIdx) {
                 _.each(v.cols, function (series) {
-                    var seriesName = series.alias ? series.alias : series.col;
+                    var seriesName = series.col ? series.col : series.alias;
                     if(!arrfind1(castedAliasSeriesName,[seriesName]))
                     castedAliasSeriesName.push([seriesName]);
                     if(typeof(series.exp)!="undefined"){
@@ -745,7 +755,17 @@ cBoard.service('dataService', function ($http, $q, updateService) {
                         o[seriesName]=Math.round(eval(series.exp)*10000)/10000;
                         series.exp=oldSeriesExp;
                     }else{
-                        o[seriesName]=isNumber(value[getIndex(seriesName)])?parseInt(value[getIndex(seriesName)]):value[getIndex(seriesName)];
+                        if(isNumber(value[getIndex(seriesName)])){
+                            if(value[getIndex(seriesName)].indexOf("E")>-1){
+                                var seriesName_value=value[getIndex(seriesName)].split("E");
+                                o[seriesName]=Math.floor(seriesName_value[0]*Math.pow(10,seriesName_value[1]));
+                            }else{
+                                o[seriesName]=parseInt(value[getIndex(seriesName)]);
+                            }
+                        }else{
+                            o[seriesName]=value[getIndex(seriesName)];
+                        }
+                        //o[seriesName]=isNumber(value[getIndex(seriesName)])?parseInt(value[getIndex(seriesName)]):value[getIndex(seriesName)];
                     }
                     if(typeof(series.sort)!="undefined"&&!arrfind(orderArr,seriesName))
                     {
