@@ -20,13 +20,13 @@ public class H2SyntaxHelper extends SqlSyntaxHelper {
         String aggExp = SqlHelper.surround(vConfig.getColumn(), "`");
         switch (vConfig.getAggType()) {
             case "sum":
-                return "SUM(f_tofloat(" + aggExp + "))";
+                return "SUM(f_todouble(" + aggExp + "))";//原来是这样的"SUM(f_tofloat(" + aggExp + "))"
             case "avg":
-                return "AVG(f_tofloat(" + aggExp + "))";
+                return "AVG(f_todouble(" + aggExp + "))";//原来是这样的"AVG(f_tofloat(" + aggExp + "))"
             case "max":
-                return "MAX(" + aggExp + ")";
+                return "MAX(f_todouble(" + aggExp + "))";//原来是这样的"MAX(" + aggExp + ")"
             case "min":
-                return "MIN(" + aggExp + ")";
+                return "MIN(f_todouble(" + aggExp + "))";//原来是这样的"MIN(" + aggExp + ")"
             case "distinct":
                 return "COUNT(DISTINCT " + aggExp + ")";
             default:
