@@ -1,11 +1,11 @@
 /**
  * Created by yfyuan on 2016/7/19.
  */
-var datasetList="";//add by wanghaihua
+//var datasetList="";//add by wanghaihua
 cBoard.controller('cBoardCtrl', function ($rootScope, $scope, $location, $http, $q, $filter, $uibModal, ModalUtils) {
-    $http.get("dashboard/getDatasetList.do?page=cboard/controller/dashboard/dashboardViewCtrl.js").success(function (response) {
-        datasetList=response;
-    });
+    // $http.get("dashboard/getDatasetList.do?page=cboard/controller/dashboard/dashboardViewCtrl.js").success(function (response) {
+    //     datasetList=response;
+    // });
     var translate = $filter('translate');
 
     $rootScope.alert = function (msg) {

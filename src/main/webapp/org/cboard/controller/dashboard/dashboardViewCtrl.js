@@ -1,24 +1,33 @@
 /**
  * Created by yfyuan on 2016/8/2.
  */
-// var datasetList="";//add by wanghaihua
+ var datasetList="";//add by wanghaihua
 cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $state, $stateParams, $http, ModalUtils, chartService, $interval, $uibModal, dataService) {
 
     $scope.loading = true;
     $scope.paramInit = 0;
     $scope.relations = JSON.stringify([]);
-    $http.get("dashboard/getDatasetList.do?page=cboard/controller/dashboard/dashboardViewCtrl.js").success(function (response) {
-        $scope.datasetList = response;
-        datasetList=response;
+    if(datasetList==""){
+        $http.get("dashboard/getDatasetList.do?page=cboard/controller/dashboard/dashboardViewCtrl.js").success(function (response) {
+            $scope.datasetList = response;
+            datasetList=response;
+            $scope.realtimeDataset = {};
+            $scope.datasetMeta = {};
+            $scope.intervals = [];
+            $scope.datasetFilters = {};
+            $scope.widgetFilters = {};
+            $scope.relationFilters = {};
+            $scope.load(false);
+        });
+    }{
         $scope.realtimeDataset = {};
         $scope.datasetMeta = {};
         $scope.intervals = [];
         $scope.datasetFilters = {};
         $scope.widgetFilters = {};
         $scope.relationFilters = {};
-        $scope.load(false);
-    });
 
+    }
     $scope.timelineColor = ['bg-light-blue', 'bg-red', 'bg-aqua', 'bg-green', 'bg-yellow', 'bg-gray', 'bg-navy', 'bg-teal', 'bg-purple', 'bg-orange', 'bg-maroon', 'bg-black'];
 
     var groupTimeline = function () {
@@ -276,7 +285,9 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
             });
         });
     };
-
+    if(datasetList!=""){
+        $scope.load(false);
+    }
     var injectFilter = function (widget) {
         var boardFilters = [];
         if(!_.isUndefined($scope.widgetFilters[widget.id])){
