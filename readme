@@ -3,5 +3,5 @@
     江苏广电BI和咱们的BI用的是同一套代码，只不过这个里面的配置不同（super-diamond-bean.xml、sign.js）
 代码位置（管理员是海花，如果想提交代码需要海花开通权限）
     https://github.com/coocaaCboard
-打包命令
+打包命令(找到相应的war包放到tomcat下)
     mvn package -DskipTests
