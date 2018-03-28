@@ -19,6 +19,14 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
             $scope.relationFilters = {};
             $scope.load(false);
         });
+    }{
+        $scope.realtimeDataset = {};
+        $scope.datasetMeta = {};
+        $scope.intervals = [];
+        $scope.datasetFilters = {};
+        $scope.widgetFilters = {};
+        $scope.relationFilters = {};
+
     }
     $scope.timelineColor = ['bg-light-blue', 'bg-red', 'bg-aqua', 'bg-green', 'bg-yellow', 'bg-gray', 'bg-navy', 'bg-teal', 'bg-purple', 'bg-orange', 'bg-maroon', 'bg-black'];
 
