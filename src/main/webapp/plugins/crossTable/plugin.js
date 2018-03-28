@@ -382,6 +382,7 @@ var crossTable = {
                 $("body").append(aForExcel);
                 $(".forExcel").click();
                 aForExcel.remove();
+
                 $(obj).show().next(".loading").hide();
             };
 
