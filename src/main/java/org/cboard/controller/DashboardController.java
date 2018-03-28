@@ -362,14 +362,18 @@ public class DashboardController extends BaseController {
 
     @RequestMapping(value = "/exportBoard")
     public ResponseEntity<byte[]> exportBoard(@RequestParam(name = "id") Long id) {
+        long time = System.currentTimeMillis();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", "report.xls");
+        long end_time =System.currentTimeMillis();
+        System.out.println("打印时间exportBoard================================================"+(end_time-time)/1000);
         return new ResponseEntity<>(boardService.exportBoard(id, user.getUserId()), headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/tableToxls")
     public ResponseEntity<byte[]> tableToxls(@RequestParam(name = "data") String data) {
+        long time = System.currentTimeMillis();
         //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
         data = data.replace("column_key", "data");
 //        data = data.replace("\"rowSpan\":\"row_null\",","");//这一行不需要
@@ -381,6 +385,8 @@ public class DashboardController extends BaseController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDispositionFormData("attachment", "table.xls");
+            long end_time =System.currentTimeMillis();
+            System.out.println("tableToxls================================================"+(end_time-time)/1000);
             return new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.CREATED);
         } catch (IOException e) {
             LOG.error("", e);
