@@ -6,7 +6,6 @@ import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.hash.Hashing;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.cboard.dao.*;
 import org.cboard.dataprovider.DataProviderManager;
@@ -18,18 +17,17 @@ import org.cboard.pojo.*;
 import org.cboard.services.*;
 import org.cboard.services.job.JobService;
 import org.cboard.services.persist.excel.XlsProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -362,18 +358,14 @@ public class DashboardController extends BaseController {
 
     @RequestMapping(value = "/exportBoard")
     public ResponseEntity<byte[]> exportBoard(@RequestParam(name = "id") Long id) {
-        long time = System.currentTimeMillis();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", "report.xls");
-        long end_time =System.currentTimeMillis();
-        System.out.println("打印时间exportBoard================================================"+(end_time-time)/1000);
         return new ResponseEntity<>(boardService.exportBoard(id, user.getUserId()), headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/tableToxls")
     public ResponseEntity<byte[]> tableToxls(@RequestParam(name = "data") String data) {
-        long time = System.currentTimeMillis();
         //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
         data = data.replace("column_key", "data");
 //        data = data.replace("\"rowSpan\":\"row_null\",","");//这一行不需要
@@ -385,8 +377,6 @@ public class DashboardController extends BaseController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDispositionFormData("attachment", "table.xls");
-            long end_time =System.currentTimeMillis();
-            System.out.println("tableToxls================================================"+(end_time-time)/1000);
             return new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.CREATED);
         } catch (IOException e) {
             LOG.error("", e);
@@ -425,6 +415,7 @@ public class DashboardController extends BaseController {
         LOG.error("Gloal exception Handler", ex);
         return new ServiceStatus(ServiceStatus.Status.Fail, ex.getMessage());
     }
+
     //从缓存中获取相应表的数据
     @RequestMapping(value = "/getCachedData")
     public DataProviderResult getCachedData(
