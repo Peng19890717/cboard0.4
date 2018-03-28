@@ -2,16 +2,18 @@
  * Created by yfyuan on 2016/8/12.
  */
 'use strict';
+var datasetListForDataService="";
 cBoard.service('dataService', function ($http, $q, updateService) {
     //var datasetList;
     var getDatasetList = function () {
         var deferred = $q.defer();
-        if (typeof(datasetList)!="undefined"&&datasetList!='') {
-            deferred.resolve(angular.copy(datasetList));
+        if (typeof(datasetListForDataService)!="undefined"&&datasetListForDataService!='') {
+            deferred.resolve(angular.copy(datasetListForDataService));
             //console.log("datasetList="+datasetList);
         } else {
             $http.get("dashboard/getDatasetList.do?page=cboard/service/data/dataService.js").success(function (data) {
                 deferred.resolve(data);
+                datasetListForDataService=data;
             });
         }
         return deferred.promise;
