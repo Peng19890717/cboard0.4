@@ -87,7 +87,9 @@ var crossTable = {
         var p_class = "p_" + random;
         var PaginationDom = "<div class='" + p_class + "'><div class='optionNum'><span>" + cboardTranslate("CROSS_TABLE.SHOW") + "</span>" + optionDom + "<span>" + cboardTranslate("CROSS_TABLE.ENTRIES") + "</span></div><div class='page'><ul></ul></div></div>";
         var operate = "<div class='toolbar toolbar" + random + "'><span class='info'><b>info: </b>" + rowNum + " x " + colNum + "</span>" +
-            "<span class='exportBnt' title='" + cboardTranslate("CROSS_TABLE.EXPORT") + "'></span><div class='loading' style='display: none;'><i class='fa fa-spinner fa-spin'></i></div></div>";
+            "<span class='exportBnt' title='" + cboardTranslate("CROSS_TABLE.EXPORT") + "'></span>" +
+            "<div class='loading' style='display: none;'><i class='fa fa-spinner fa-spin'></i></div>" +
+            "</div>";
         $(container).html(operate);
         // $(container).append("<div class='tableView table_" + random + "' style='width:99%;max-height:" + tall + "px;overflow:auto'>" + html + "</div>");
         $(container).append("<div class='tableView table_" + random + "' style='width:99%;overflow:auto'>" + html + "</div>");
@@ -367,8 +369,7 @@ var crossTable = {
     },
     export: function (random, data) {
         $(".toolbar" + random + " .exportBnt").on('click', function () {
-            $(this).hide().next(".loading").show();
-            var obj=this;
+            $("#layer").show();
             var xhr = new XMLHttpRequest();
             var formData = new FormData();
             formData.append('data', JSON.stringify({data: data, type: 'table'}));
@@ -383,7 +384,7 @@ var crossTable = {
                 $(".forExcel").click();
                 aForExcel.remove();
 
-                $(obj).show().next(".loading").hide();
+                $("#layer").hide();
             };
 
             xhr.send(formData);
