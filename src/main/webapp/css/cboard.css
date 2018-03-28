@@ -345,13 +345,35 @@ span.ellipse {
     float: left;
     margin: 4px 0 0 5px;
 }
-.exportBnt, .drillUp, .drillDown,.toolbar .loading{
+.exportBnt, .drillUp, .drillDown{
     margin:7px 5px 10px 5px;
     float: right;
     width: 15px;
     height: 15px;
     cursor: pointer;
 
+}
+#layer{
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .3);
+    z-index: 99999;
+}
+#layer .fa {
+    display: inline-block;
+    font: normal normal normal 44px/1 FontAwesome;
+     font-size: 44px;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    margin: -22px 0 0 -22px;
 }
 .drillUp{
     background: url("../imgs/drillup.png");
