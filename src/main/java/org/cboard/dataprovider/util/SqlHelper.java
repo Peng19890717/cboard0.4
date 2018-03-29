@@ -135,7 +135,22 @@ public class SqlHelper {
                 if (config.getValues().size() == 2) {
                     v1 = config.getValues().get(1);
                 }
-                return "'"+new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyyMMdd").parse(v0))+"' AND '"+new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyyMMdd").parse(v1))+"'";
+                //这里由于日期出入的参数有的是yyyy-MM-dd，有的是yyyyMMdd 所有这里需要进行判断
+                String result="";
+                SimpleDateFormat sd1=new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sd2=new SimpleDateFormat("yyyyMMdd");
+                if(v0!=null && v0.contains("-")){
+                    result="'"+v0;
+                }else{
+                    result="'"+sd1.format(sd2.parse(v0));
+                }
+                if(v1!=null && v1.contains("-")){
+                    result+="' AND '"+v1+"'";
+                }else{
+                    result+="' AND '"+sd1.format(sd2.parse(v1))+"'";
+                }
+                return result;
+                //return "'"+new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyyMMdd").parse(v0))+"' AND '"+new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyyMMdd").parse(v1))+"'";
             }
         }catch (Exception e){
             e.printStackTrace();
