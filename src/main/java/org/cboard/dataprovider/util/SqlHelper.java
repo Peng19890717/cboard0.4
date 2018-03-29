@@ -135,6 +135,7 @@ public class SqlHelper {
                 if (config.getValues().size() == 2) {
                     v1 = config.getValues().get(1);
                 }
+
                 //这里由于日期出入的参数有的是yyyy-MM-dd，有的是yyyyMMdd 所有这里需要进行判断
                 String result="";
                 SimpleDateFormat sd1=new SimpleDateFormat("yyyy-MM-dd");
