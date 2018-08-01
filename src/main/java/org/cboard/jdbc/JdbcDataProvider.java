@@ -17,8 +17,6 @@ import org.cboard.dataprovider.annotation.DatasourceParameter;
 import org.cboard.dataprovider.annotation.ProviderName;
 import org.cboard.dataprovider.annotation.QueryParameter;
 import org.cboard.dataprovider.config.AggConfig;
-import org.cboard.dataprovider.config.ConfigComponent;
-import org.cboard.dataprovider.config.DimensionConfig;
 import org.cboard.dataprovider.result.AggregateResult;
 import org.cboard.dataprovider.util.DPCommonUtils;
 import org.cboard.dataprovider.util.SqlHelper;
@@ -34,7 +32,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /**
  * Created by yfyuan on 2016/8/17.
@@ -226,8 +223,8 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         }
         return sql;
     }
-
-
+    //一旦有时间参数，则DashboardController.getAggregateData(...)的reload永远是true，也就是说需要重新加载数据
+    //所以肯定会走这里的方法，数据直接从mysql中获取而不是缓存
     @Override
     public String[][] getData() throws Exception {
         final int batchSize = 100000;
@@ -238,16 +235,16 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         LOG.info("Start SQL String: " + sql);
         //LOG.info("ac String: " + ac);
 
-        if(ac!=null){ //日期进行解析
-            String betweenStr = sqlHelper.filterSqlV2(ac.getFilters().stream(), "BETWEEN");
+        if(ac!=null){ //日期进行解析（这里面ac存储的是传递过来的参数）
+            String betweenStr = sqlHelper.filterSqlV2(ac.getFilters().stream(), "BETWEEN");//获取的数据是这种格式   BETWEEN '2018-03-20' AND '2018-03-28'
             LOG.info("ac String: " + betweenStr);
-            boolean flagBetween = "".equals(betweenStr);
+            boolean flagBetween = "".equals(betweenStr);//表示没有传递过来时间参数
             if(!flagBetween){ //如果存在日期条件
                 Matcher m=getMatcher("\\{day_\\d+}",sql);
                 if(m.find()){
-                    sql=sql.replace(m.group(),betweenStr);
+                    sql=sql.replace(m.group(),betweenStr);//替换（将这种形式\\{day_\\d+}     替换成具体时间    BETWEEN '2018-03-20' AND '2018-03-28'）
                 }
-            }else {
+            }else {//没有传递过来时间参数，表示在刷新报表则按照{day_n}来获取时间，如果n=2代表只获取近2天的数据
                 sql=getSQLMatcher(sql);
             }
         }else {//如果第一次进入没有查询条件的话，就必须要替换sql中的通配符
