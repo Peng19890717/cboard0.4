@@ -109,13 +109,13 @@ public class SqlHelper {
     public String filterSqlV2(Stream<ConfigComponent> filterStream, String prefix) {
         StringJoiner where = new StringJoiner("", prefix + " ", "");
         where.setEmptyValue("");
-        filterStream.map(e->filterData(e, Constans.DAY_CN))
-                .map(e->configComponentToSqlV2(e))
+        filterStream.map(e->filterData(e, Constans.DAY_CN))//获取界面传递过来的时间参数
+                .map(e->configComponentToSqlV2(e))//通过传递过来的时间参数（包括开始时间+结束时间），将时间参数组成为这种形式 'yyyy-MM-dd' and 'yyyy-MM-dd'
                 .filter(e -> e != null)
-                .forEach(where::add);
-        return where.toString();
+                .forEach(where::add);//其实只有一条数据
+        return where.toString();//这种形式    BETWEEN '2018-03-20' AND '2018-03-28'
     }
-    /**过滤出查询条件中日期查询条件*/
+    /**过滤出查询条件中日期查询条件（只要日期的查询条件）*/
     private static DimensionConfig filterData(ConfigComponent configComponent,String param) {
         if (configComponent instanceof DimensionConfig) {
             DimensionConfig cc = (DimensionConfig) configComponent;
@@ -135,7 +135,7 @@ public class SqlHelper {
                 if (config.getValues().size() == 2) {
                     v1 = config.getValues().get(1);
                 }
-
+                //将时间全部转化为yyyy-MM-dd这种形式，所以过滤的时间的时候一定要将时间变为yyyy-MM-dd（通过mysql的date(...)函数）
                 //这里由于日期出入的参数有的是yyyy-MM-dd，有的是yyyyMMdd 所有这里需要进行判断
                 String result="";
                 SimpleDateFormat sd1=new SimpleDateFormat("yyyy-MM-dd");
